@@ -1,0 +1,68 @@
+
+trix-editor:empty:not(:focus)::before {
+  content: "•" !important;
+  /* color: graytext;
+  cursor: text; */
+}
+ul {
+  list-style: initial !important;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+ nav.right_menu_togle {
+  background: rgba(0,0,0,0.9);
+  display: block;
+  height: 100%;
+  overflow: auto;
+  position: fixed;
+  right: -520px;
+  font-size: 15px;
+  top: 0;
+  width: 100%;
+  max-width: 520px;
+  z-index: 2000;
+  transition: right 0.3s ease-in-out 0s;
+  -webkit-transition: right 0.3s ease-in-out 0s;
+
+
+}
+button.slick-arrow.slick-prev {
+
+  background-color: #077493;
+  
+      height: 35px;
+  
+      width: 35px;
+  
+      border-radius: 100px;
+  
+    }
+  
+  button.slick-arrow.slick-next {
+  
+    background-color: #077493;
+  
+    height: 35px;
+  
+    width: 35px;
+  
+    border-radius: 100px;
+  
+  }
+  .Show_success_bookmark {
+    color: #fff;
+    background-color: #1abc9c !important;
+    border-color: #e64844 !important;
+    width: 23%;
+    position: fixed;
+    top: 7%;
+    right: 3%;
+    border-radius: 4px;
+    z-index: 1;
+    font-weight: 700;
+    padding: 14px 0px;
+    text-align: center;
+}
