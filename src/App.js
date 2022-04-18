@@ -40,6 +40,8 @@ import AgentLayout from './components/AgentLayout';
 import AdminLayout from './components/AdminLayout';
 import StudentLayout from './components/StudentLayout';
 import UniversityLayout from './components/UniversityLayout';
+import UniversityAdminLayout from './components/UniversityAdminLayout';
+
 import Student from './components/Home/Student';
 import Error from './components/Home/Error';
 import StudyAustralia from './components/Home/StudyAustralia';
@@ -59,6 +61,8 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
+     
+        <Route path="/universityAdmin" render={(props) => <UniversityAdminLayout {...props} />} />
 
         <Route path="/university" render={(props) => <UniversityLayout {...props} />} />
         <Route path="/student" render={(props) => <StudentLayout {...props} />} />
@@ -68,9 +72,9 @@ function App() {
         <Route path='/students' component={Student} />
         <Route path='/Recruitment' component={Recruitment} />
         <Route path='/country' component={country} />
-        <Route path='/Degree' component={Degree} />
+        <Route path='/degree' component={Degree} />
         <Route path='/EducationLevel' component={EducationLevel} />
-        <Route path='/MajorPursue' component={MajorPursue} />
+        <Route path='/majorPursue' component={MajorPursue} />
         <Route path='/Test' component={Test} />
         <Route path='/AcademicTest' component={AcademicTest} />
         <Route path='/Experience' component={Experience} />
@@ -100,7 +104,7 @@ function App() {
         <Route path='/privacy-policy' component={PrivacyPolicy} />
         <Route path='/refund-policy' component={RefundPolicy} />
         <Route path='/honor-code' component={HonorCode} />
-      
+
 
 
         <Route component={Error} />

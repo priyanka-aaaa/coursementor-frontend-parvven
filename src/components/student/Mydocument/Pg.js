@@ -30,8 +30,10 @@ export default function Pg() {
     const [myPassportBackDocx, setmyPassportBackDocx] = useState("0");
     const [mycvDocx, setmycvDocx] = useState("0");
     useEffect(() => {
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
+        if (studentId !== null) {
         function pgAllDetails() {
             fetch(process.env.REACT_APP_SERVER_URL + 'student/educationDocument', {
                 method: 'get',
@@ -69,6 +71,7 @@ export default function Pg() {
                 })
         }
         pgAllDetails()
+    }
     }, [])
     function viewMyPassportDocument() {
         setmyPassportDocx("1")

@@ -4,7 +4,7 @@ import SweetAlert from 'react-bootstrap-sweetalert';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faTrash, faPen, faEye, faUserSlash
+    faTrash, faPen, faEye, faUserSlash,faPlus
 } from '@fortawesome/free-solid-svg-icons';
 import Loader from '../Home/Loader';
 export default function AdminUniversity() {
@@ -20,8 +20,10 @@ export default function AdminUniversity() {
     const [showSweetAlert, setshowSweetAlert] = useState("0");
     const [deleteId, setdeleteId] = useState("");
     useEffect(() => {
+        var adminId = localStorage.getItem('adminId');
         var mounted = localStorage.getItem("adminToken")
         setMounted(mounted)
+        if (adminId !== null) {
         function universities(){
             setmyloader("true")
         
@@ -37,10 +39,18 @@ export default function AdminUniversity() {
             })
         }
         universities()
+    }
     }, [])
     let handleDeleteClick = (value) => {
         setshowSweetAlert("1")
         setdeleteId(value)
+    }
+    function handleViewUniversity(value) {
+        localStorage.setItem('adminUniversityId', value);
+
+    }
+    function handleNewUniversity() {
+        localStorage.removeItem("adminUniversityId");
     }
     return (
         <div className="container">
@@ -93,6 +103,18 @@ export default function AdminUniversity() {
                 : null
             }
             <div className="row">
+            <div className="col-md-6 text-right">
+                    <Link
+                        to={'/universityAdmin/dashboard'}
+                        // target="_blank"
+                        className="btn btn-primary nav-link" target="_blank" onClick={() => handleNewUniversity()} >
+                        <span>
+                            <FontAwesomeIcon icon={faPlus} />
+                        </span>Add New University
+                    </Link>
+
+
+                </div>
                 <div className="col-xl-12 col-lg-7">
                     <div className="card shadow mb-4">
                         <div className="card shadow mb-4">
@@ -103,7 +125,7 @@ export default function AdminUniversity() {
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <th>Id</th>
+                                           
                                             <th>Name</th>
 
                                             <th>Email</th>
@@ -118,7 +140,7 @@ export default function AdminUniversity() {
                                             return (
                                                 <tr key={i}>
                                                     <td>{i + 1}</td>
-                                                    <td>{object._id}</td>
+                                             
                                                     <td> {object.name}</td>
                                                     <td>{object.email}</td>
                                                     <td>{object.phone}</td>
@@ -128,8 +150,17 @@ export default function AdminUniversity() {
                                                         <button className="btn btn-danger btn-sm" onClick={() => handleDeleteClick(object._id)}>
                                                             <FontAwesomeIcon icon={faTrash} />
                                                         </button>
-                                                        <button className="btn btn-primary btn-sm vbtn" ><Link to={'/schools/' + object.universityPrimaryInformation.slug} className="nav-link" >
+                                                        <button className="btn btn-primary btn-sm vbtn" ><Link to={'/schools/' + object.universityPrimaryInformation.slug}
+                                                         target="_blank"
+                                                        className="nav-link" >
                                                             <FontAwesomeIcon icon={faEye} />
+                                                        </Link></button>
+                                                        <button className="btn btn-primary btn-sm vbtn" ><Link
+                                                            to={'/universityAdmin/dashboard'} onClick={() => handleViewUniversity(object._id)}
+                                                            target="_blank"
+                                                            className="nav-link" >
+                                                            {/* <FontAwesomeIcon icon={faEye} /> */}
+                                                            <FontAwesomeIcon icon={faPen} />
                                                         </Link></button>
                                                     </td>
                                                 </tr>

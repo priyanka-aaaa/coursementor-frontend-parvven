@@ -431,7 +431,7 @@ export default function Commission() {
                                                                         <div className="row">
                                                                             <div className="col-md-6">
                                                                                 <div className="form-group">
-                                                                                <label className="form-label">Course Name<span class="req-star">*</span></label>
+                                                                                <label className="form-label">Course Name<span className="req-star">*</span></label>
 
                                                                                 <select className="form-control"
                                                                                     required
@@ -451,7 +451,7 @@ export default function Commission() {
 
                                                                             <div className="col-md-6">
                                                                             <div className="form-group">
-                                                                                <label className="form-label"> Tuition Fee<span class="req-star">*</span></label>
+                                                                                <label className="form-label"> Tuition Fee<span className="req-star">*</span></label>
                                                                                  <input type="text" readOnly={true} value={tuitionFee} className="form-control" />
                                                                                  </div>
                                                                             </div>
@@ -460,7 +460,7 @@ export default function Commission() {
                                                                             <div className="col-md-6">
                                                                             <div className="form-group">
                                                                                 <fieldset>
-                                                                                    <label className="form-label">Commision Type<span class="req-star">*</span></label><br />
+                                                                                    <label className="form-label">Commision Type<span className="req-star">*</span></label><br />
                                                                                     <div className="form-check form-check-inline">
 
                                                                                         <input className="form-check-input" type="radio" name="commissionType" id="flexRadioDefault1"
@@ -516,7 +516,7 @@ export default function Commission() {
                                                                             <div className="form-group">
                                                                                 <fieldset
                                                                                 >
-                                                                                    <label className="form-label">Commision Set<span class="req-star">*</span></label><br />
+                                                                                    <label className="form-label">Commision Set<span className="req-star">*</span></label><br />
                                                                                     <div className="form-check form-check-inline">
                                                                                         <input className="form-check-input" type="radio" name="commissionTime" id="flexRadioDefault3"
 
@@ -599,7 +599,7 @@ export default function Commission() {
                                                                             <div className="row">
                                                                                 <div className="col-md-6">
                                                                                 <div className="form-group">
-                                                                                    <label className="form-label">Course Name<span class="req-star">*</span></label>
+                                                                                    <label className="form-label">Course Name<span className="req-star">*</span></label>
                                                                                     <select className="form-control" onChange={(e) => handleChange(e.target.value)}>
                                                                                         <option value={courseName} >{courseName}</option>
                                                                                         {data.map((object, i) => {
@@ -615,7 +615,7 @@ export default function Commission() {
 
                                                                                 <div className="col-md-6">
                                                                                 <div className="form-group">
-                                                                                    <label className="form-label">Tuition Fee<span class="req-star">*</span></label>
+                                                                                    <label className="form-label">Tuition Fee<span className="req-star">*</span></label>
                                                                                     <input type="text" readOnly={true} value={tuitionFee} className="form-control" />
                                                                                         </div>
                                                                                 </div>
@@ -629,7 +629,7 @@ export default function Commission() {
                                                                                     }
 
                                                                                     >
-                                                                                        <label className="form-label">Commision Type<span class="req-star">*</span></label><br />
+                                                                                        <label className="form-label">Commision Type<span className="req-star">*</span></label><br />
 
 
                                                                                         <div className="form-check form-check-inline">
@@ -692,7 +692,7 @@ export default function Commission() {
                                                                                 <div className="form-group">
                                                                                     <fieldset
                                                                                     >
-                                                                                        <label className="form-label">Commision Set<span class="req-star">*</span></label><br />
+                                                                                        <label className="form-label">Commision Set<span className="req-star">*</span></label><br />
                                                                                         <div className="form-check form-check-inline"   >
 
                                                                                             <input className="form-check-input" type="radio" name="commissionTime" id="flexRadioDefault3"

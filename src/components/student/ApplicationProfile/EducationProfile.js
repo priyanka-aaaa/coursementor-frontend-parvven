@@ -41,39 +41,42 @@ export default function EducationProfile() {
         city_name: ""
     }])
     useEffect(() => {
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
-        const url = process.env.REACT_APP_SERVER_URL + 'student/educations';
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': mounted,
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                var myresults = data.studentEducations;
-                if (Object.keys(myresults).length === 0) {
-                }
-                else {
-                    setFormValues(data.studentEducations)
+        if (studentId !== null) {
+            const url = process.env.REACT_APP_SERVER_URL + 'student/educations';
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': mounted,
                 }
             })
-        axios.get(process.env.REACT_APP_SERVER_URL + 'countries/')
-            .then(function (res) {
-                if (res.data.success === true) {
-                    setcountries(res.data.result);
-                }
-            })
-            .catch(error => {
-            });
-        axios.get(process.env.REACT_APP_SERVER_URL + 'states/india')
-            .then(function (res) {
-                if (res.data.success === true) {
-                }
-            })
-            .catch(error => {
-            });
+                .then(response => response.json())
+                .then(data => {
+                    var myresults = data.studentEducations;
+                    if (Object.keys(myresults).length === 0) {
+                    }
+                    else {
+                        setFormValues(data.studentEducations)
+                    }
+                })
+            axios.get(process.env.REACT_APP_SERVER_URL + 'countries/')
+                .then(function (res) {
+                    if (res.data.success === true) {
+                        setcountries(res.data.result);
+                    }
+                })
+                .catch(error => {
+                });
+            axios.get(process.env.REACT_APP_SERVER_URL + 'states/india')
+                .then(function (res) {
+                    if (res.data.success === true) {
+                    }
+                })
+                .catch(error => {
+                });
+        }
     }, [])
     let handleChange = (i, e) => {
         let newFormValues = [...formValues];
@@ -313,19 +316,19 @@ export default function EducationProfile() {
                                                 <div className="form-group">
                                                     <label htmlFor="education_status">Education Status<span className="text-danger">*</span></label>
                                                     <div className="checkgrp">
-                                                    <label className="ant-radio-wrapper ant-radio-wrapper-checked">
-                                                        <span className="ant-radio ant-radio-checked"><input
-                                                            onChange={(e) => setstatusType(index, "Pursuing")}
-                                                            checked={element.status === "Pursuing"}
-                                                            required
-                                                            name="status" type="radio" className="ant-radio-input" />
-                                                            <span className="ant-radio-inner"></span></span>Pursuing</label>
-                                                            <label className="ant-radio-wrapper"><span className="ant-radio"><input
-                                                                onChange={(e) => setstatusType(index, "Completed")}
-                                                                checked={element.status === "Completed"}
+                                                        <label className="ant-radio-wrapper ant-radio-wrapper-checked">
+                                                            <span className="ant-radio ant-radio-checked"><input
+                                                                onChange={(e) => setstatusType(index, "Pursuing")}
+                                                                checked={element.status === "Pursuing"}
                                                                 required
-                                                                name="status" type="radio" className="ant-radio-input" /><span className="ant-radio-inner"></span></span>
-                                                        Completed</label></div>
+                                                                name="status" type="radio" className="ant-radio-input" />
+                                                                <span className="ant-radio-inner"></span></span>Pursuing</label>
+                                                        <label className="ant-radio-wrapper"><span className="ant-radio"><input
+                                                            onChange={(e) => setstatusType(index, "Completed")}
+                                                            checked={element.status === "Completed"}
+                                                            required
+                                                            name="status" type="radio" className="ant-radio-input" /><span className="ant-radio-inner"></span></span>
+                                                            Completed</label></div>
                                                 </div>
                                             </div>
                                             <div className="col-12 col-sm-2 col-md-2 col-lg-2 text-right mt-2">
@@ -339,8 +342,6 @@ export default function EducationProfile() {
                                                         <FontAwesomeIcon icon={faTrash} />
                                                     </a>
                                                 }
-
-
                                             </div>
                                         </div>
                                         <div className="row">
@@ -656,7 +657,6 @@ export default function EducationProfile() {
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div className="row">
                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                                                 <div className="form-group"><label htmlFor="grading_scheme_id">Grade
@@ -675,7 +675,6 @@ export default function EducationProfile() {
                                                 <div className="form-group"><label htmlFor="grade_marks">Grade
                                                     Average/Marks Obtained</label><input
                                                         value={element.marks || ""} onChange={e => handleChange(index, e)}
-
                                                         type="text" className="form-control" id="grade_marks" name="marks" placeholder="Grade Average/Marks Obtained" /></div>
                                             </div>
                                         </div>
@@ -683,24 +682,20 @@ export default function EducationProfile() {
                                         <div className="row">
                                             <div className="col-12 col-sm-6 col-md-6 col-lg-4">
                                                 <div className="form-group">
-                                                    <label htmlFor="attendedFrom">Attended From</label>                                                 
+                                                    <label htmlFor="attendedFrom">Attended From</label>
                                                     <input
                                                         value={element.attendedForm || ""} onChange={e => handleChange(index, e)}
-
                                                         name="attendedForm"
                                                         type="date" className="form-control" />
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div className="row">
                                             <div className="col-12 col-sm-6 col-md-6 col-lg-4">
                                                 <div className="form-group">
                                                     <label htmlFor="institute_name">Name of Institution</label>
                                                     <input
                                                         value={element.institution || ""} onChange={e => handleChange(index, e)}
-
-
                                                         type="text" className="form-control" id="institute_name" name="institution" placeholder="Name of Institution" />
                                                 </div>
                                             </div>
@@ -709,8 +704,6 @@ export default function EducationProfile() {
                                                     of Education</label>
                                                     <input
                                                         value={element.affiliationUniversity || ""} onChange={e => handleChange(index, e)}
-
-
                                                         type="text" className="form-control" id="institute_affiliation" name="affiliationUniversity" placeholder="Name of Institution" />
                                                 </div>
                                             </div>
@@ -720,8 +713,6 @@ export default function EducationProfile() {
                                                         Instruction</label>
                                                     <select
                                                         value={element.language || ""} onChange={e => handleChange(index, e)}
-
-
                                                         className="form-control" id="language_of_study" name="language" >
                                                         <option value="English">English</option>
                                                         <option value="Hindi">Hindi</option>
@@ -730,8 +721,6 @@ export default function EducationProfile() {
                                                 </div>
                                             </div>
                                         </div>
-
-
                                         <div className="row">
                                             <div className="col-12 col-sm-6 col-md-6 col-lg-6">
                                                 <div className="form-group">
@@ -755,8 +744,7 @@ export default function EducationProfile() {
                                                     <select className="form-control" name="state"
                                                         onChange={(e) => handlestate(e.target.value)}
                                                         required
-                                                        value={state}
-                                                    >
+                                                        value={state}>
                                                         {CheckState === "0" ? <option value={state}>{state}</option> : <option value="">Please select state</option>}
                                                         {states.map((element, index) => {
                                                             return (
@@ -768,73 +756,57 @@ export default function EducationProfile() {
                                                     <span style={{ color: "red" }}> {stateError}</span>
                                                 </div>
                                             </div>
-                                        
-                                            </div>
-
-                                            <div className="row">
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6">
-                                                    <div className="form-group"><label htmlFor="City/institute_address_city">City/Town</label>
-                                                        <select className="form-control" name="city" required
-                                                            value={city}
-                                                            onChange={(e) => setcity(e.target.value)}
-                                                        >
-                                                            {CheckCity === "0" ? <option value={city}>{city}</option> : <option value="">Please select City</option>}
-                                                            {cities.map((element, index) => {
-                                                                return (
-                                                                    <option
-                                                                        value={element.city_name} key={index}>{element.city_name}</option>
-                                                                )
-                                                            })}
-                                                        </select>
-                                                        <span style={{ color: "red" }}> {cityError}</span>
-                                                    </div>
-                                                </div>
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6">
-                                                    <div className="form-group"><label htmlFor="institute_address_text_1">Address</label><input
-                                                        value={element.address || ""} onChange={e => handleChange(index, e)}
-
-                                                        type="text" className="form-control" id="institute_address_text_1" placeholder="Address" name="address" />
-                                                    </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6">
+                                                <div className="form-group"><label htmlFor="City/institute_address_city">City/Town</label>
+                                                    <select className="form-control" name="city" required
+                                                        value={city}
+                                                        onChange={(e) => setcity(e.target.value)}
+                                                    >
+                                                        {CheckCity === "0" ? <option value={city}>{city}</option> : <option value="">Please select City</option>}
+                                                        {cities.map((element, index) => {
+                                                            return (
+                                                                <option
+                                                                    value={element.city_name} key={index}>{element.city_name}</option>
+                                                            )
+                                                        })}
+                                                    </select>
+                                                    <span style={{ color: "red" }}> {cityError}</span>
                                                 </div>
                                             </div>
-
-                                            <div className="row">
-                                                <div className="col-12 col-sm-6 col-md-6 col-lg-6">
-                                                    <div className="form-group"><label htmlFor="institute_address_zipcode">Zipcode</label><input
-                                                        value={element.zipcode || ""} onChange={e => handleChange(index, e)}
-
-                                                        type="number" className="form-control" id="institute_address_zipcode" placeholder="Zipcode" name="zipcode" /></div>
+                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6">
+                                                <div className="form-group"><label htmlFor="institute_address_text_1">Address</label><input
+                                                    value={element.address || ""} onChange={e => handleChange(index, e)}
+                                                    type="text" className="form-control" id="institute_address_text_1" placeholder="Address" name="address" />
                                                 </div>
                                             </div>
-
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-12 col-sm-6 col-md-6 col-lg-6">
+                                                <div className="form-group"><label htmlFor="institute_address_zipcode">Zipcode</label><input
+                                                    value={element.zipcode || ""} onChange={e => handleChange(index, e)}
+                                                    type="number" className="form-control" id="institute_address_zipcode" placeholder="Zipcode" name="zipcode" /></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 ))}
                                 <div className="mb-3">
                                     <div className="row">
                                         <div className="col-md-6"></div>
                                         <div className="col-md-6 text-right">
-
                                             <button type="button" title="Add New Education" className="btn btn-success " onClick={() => addFormFields()}>Add New</button>
-
                                             <button title="Save" type="submit" className="btn btn-secondary ml-2">Save
                                             </button>
-
                                             <button title="Save & Next" type="submit" data-bs-toggle="collapse" className="btn btn-success" href="#collapse5">Save &
                                                 Next</button>
-
                                         </div>
-
                                     </div>
-
                                 </div>
                             </div>
-
-
-
                         </form>
 
                     </div>
-
                 </div>
             </div>
         </div>

@@ -25,6 +25,7 @@ export default function Dashboard() {
 
 
   useEffect(() => {
+    var studentId = localStorage.getItem('studentId');
     var mounted = localStorage.getItem("studentToken")
     setMounted(mounted)
     if (mounted !== null) {
@@ -103,7 +104,7 @@ export default function Dashboard() {
                             <span><FontAwesomeIcon icon={faAreaChart} /></span>
 
                             <h5>Current Application Process</h5>
-                            {object.applicationProgress}
+                         Apply
                           </div>
                         </div>
                         <div className="col-md-6 text-right">
@@ -138,28 +139,28 @@ export default function Dashboard() {
              
               <div className="row">
                 <div className="col-md-8">
-                  <div class="card">
+                  <div className="card">
                     <h5>Application Information</h5><hr />
-                    <div class="row">
-                      <div class="col-md-3">
+                    <div className="row">
+                      <div className="col-md-3">
                         <h5>Order Id </h5>
                         <p>{mybuildApplicationID}</p>
                       </div>
-                      <div class="col-md-3">
+                      <div className="col-md-3">
                         <h5>Course Name</h5>
                         <p>{mycourseName}</p>
                       </div>
-                      <div class="col-md-3">
+                      <div className="col-md-3">
                         <h5> Session</h5>
                         <p>{mysession} </p>
                       </div>
-                      <div class="col-md-3">
+                      <div className="col-md-3">
                         <h5>University Name</h5>
                         <p>{myuniversityName}</p>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-3">
+                    <div className="row">
+                      <div className="col-md-3">
                         <h5> University Country</h5>
                         <p>{mycountry}</p>
                       </div>
@@ -228,51 +229,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        {/* <div className="col-lg-6 mb-4">
-        <div className="card shadow mb-4">
-          <div className="card-header py-3">
-            <h6 className="m-0 font-weight-bold text-primary">Important Dates</h6>
-          </div>
-          <div className="card-body">
-            <a className=" d-flex align-items-center" href="#">
-              <div className="dropdown-list-image mr-3">
-                o4<br /> April
-                <div className="status-indicator bg-success"></div>
-              </div>
-              <div className="font-weight-bold">
-                <div className="text-truncatex">Hi there! I am wondering if you can help me with
-                  a
-                  problem I've been having.</div>
-                <div className="small text-gray-500">01 : 00 AM - 06 : 00 PM</div>
-              </div>
-            </a>
-            <a className=" d-flex align-items-center" href="#">
-              <div className="dropdown-list-image mr-3">
-                o1<br /> JAN
-                <div className="status-indicator bg-success"></div>
-              </div>
-              <div className="font-weight-bold">
-                <div className="text-truncatex">Hi there! I am wondering if you can help me with
-                  a
-                  problem I've been having.</div>
-                <div className="small text-gray-500">03 : 00 pm - 05 : 00 PM</div>
-              </div>
-            </a>
-            <a className=" d-flex align-items-center" href="#">
-              <div className="dropdown-list-image mr-3">
-                o4<br /> April
-                <div className="status-indicator bg-success"></div>
-              </div>
-              <div className="font-weight-bold">
-                <div className="text-truncatex">Hi there! I am wondering if you can help me with
-                  a
-                  problem I've been having.</div>
-                <div className="small text-gray-500">10 : 00 AM - 04 : 00 PM</div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div> */}
+       
       </div>
     </div>
   );

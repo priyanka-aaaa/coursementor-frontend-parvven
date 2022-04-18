@@ -24,7 +24,7 @@ function UniversityLayout(props) {
     const [mounted, setMounted] = useState();
     const [email, setemail] = useState();
     const [universityEmail, setuniversityEmail] = useState();
-    const [currentMenu, setcurrentMenu] = useState("dashboard");
+    const [currentMenu, setcurrentMenu] = useState("");
 
 
     function handletoogleClick() {
@@ -37,10 +37,8 @@ function UniversityLayout(props) {
     }
     function handleCurrentClick(value) {
         setcurrentMenu(value)
-
     }
     useEffect(() => {
-
         if (localStorage.getItem('universityId')) {
             var universityId = localStorage.getItem('universityId');
             var mounted = localStorage.getItem('universityToken');
@@ -53,6 +51,10 @@ function UniversityLayout(props) {
             setredirectToReferrer("true")
         }
 
+
+        var currentUrl = window.location.href;
+        var splitcurrentUrl = currentUrl.split("university/")
+        setcurrentMenu(splitcurrentUrl[1])
     }, [])
 
     function logout() {
@@ -102,7 +104,7 @@ function UniversityLayout(props) {
                     {currentMenu === "dashboard" ?
                         <li className="nav-item"
                             onClick={() => handleCurrentClick("dashboard")}
-                         
+
                             data-toggle="tooltip" data-placement="right" title="University">
                             <Link to={'/university/dashboard'} className="nav-link current-tab" >
                                 <FontAwesomeIcon icon={faUniversity} />
@@ -117,7 +119,7 @@ function UniversityLayout(props) {
                                 <span>University</span></Link>
                         </li>}
                     {currentMenu === "courses" ?
-                        <li onClick={() => handleCurrentClick("courses")} className="nav-item"  data-toggle="tooltip" data-placement="right" title="Coures Listingn">
+                        <li onClick={() => handleCurrentClick("courses")} className="nav-item" data-toggle="tooltip" data-placement="right" title="Coures Listing">
                             <Link to={'/university/courses'} className="nav-link current-tab" data-toggle="tooltip" data-placement="right" title="Coures Listing">
                                 <FontAwesomeIcon icon={faBook}
 
@@ -136,7 +138,7 @@ function UniversityLayout(props) {
                     }
                     {currentMenu === "commission" ?
                         <li className="nav-item "
-                           
+
                             data-toggle="tooltip" data-placement="right" title="Set Commission">
                             <Link to={'/university/commission'} className="nav-link current-tab" href="#"
                                 onClick={() => handleCurrentClick("commission")}
@@ -156,7 +158,7 @@ function UniversityLayout(props) {
                         </li>}
                     {currentMenu === "summary" ?
                         <li className="nav-item "
-                           
+
                             data-toggle="tooltip" data-placement="right" title="Summary Information"
                         >
                             <Link to={'/university/summary'} className="nav-link current-tab" href="#"

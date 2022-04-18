@@ -415,7 +415,7 @@ export default function Ranking() {
                                                         <div className="row">
                                                             <div className="col">
                                                                 <div className="form-group ">
-                                                                    <label htmlFor="fname" className="form-label">Agency Name<span class="req-star">*</span></label>
+                                                                    <label htmlFor="fname" className="form-label">Agency Name<span className="req-star">*</span></label>
                                                                     <input required type="text" className="form-control" placeholder="Agency Name" name="agname"
                                                                         value={agencyName}
                                                                         onChange={(e) => setagencyName(e.target.value)}
@@ -424,7 +424,7 @@ export default function Ranking() {
                                                             </div>
                                                             <div className="col">
                                                                 <div className="form-group ">
-                                                                    <label htmlFor="lname" className="form-label">Rank<span class="req-star">*</span></label>
+                                                                    <label htmlFor="lname" className="form-label">Rank<span className="req-star">*</span></label>
                                                                     <input required type="number" className="form-control" placeholder="" name="rank"
                                                                         value={rank}
                                                                         onChange={(e) => setrank(e.target.value)}
@@ -433,7 +433,7 @@ export default function Ranking() {
                                                             </div>
                                                             <div className="col">
                                                                 <div className="form-group ">
-                                                                    <label htmlFor="lname" className="form-label">Year<span class="req-star">*</span></label>
+                                                                    <label htmlFor="lname" className="form-label">Year<span className="req-star">*</span></label>
                                                                     <input required type="number" className="form-control" placeholder="" name="rank"
                                                                         value={year}
                                                                         onChange={(e) => setyear(e.target.value)}
@@ -447,7 +447,7 @@ export default function Ranking() {
                                                     <div className="mb-3">
                                                         <div className="row">
                                                             <div className="form-group ">
-                                                                <label htmlFor="fname" className="form-label">Certificate<span class="req-star">*</span>
+                                                                <label htmlFor="fname" className="form-label">Certificate<span className="req-star">*</span>
 
                                                                 </label>
                                                                 {/* <p>File extensions supported  .jpeg, .jpg, .png</p> */}
@@ -473,7 +473,7 @@ export default function Ranking() {
                                                                 <span style={{ color: "red" }}> {certificateError}</span>
 
 
-                                                                <p Class="selected-certificate"> {showCertificate}</p>
+                                                                <p className="selected-certificate"> {showCertificate}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -519,7 +519,7 @@ export default function Ranking() {
                                                         <div className="row">
                                                             <div className="col">
                                                                 <div className="form-group ">
-                                                                    <label htmlFor="fname" className="form-label">Agency Name<span class="req-star">*</span></label>
+                                                                    <label htmlFor="fname" className="form-label">Agency Name<span className="req-star">*</span></label>
                                                                     <input required type="text" className="form-control" placeholder="Agency Name" name="agname"
                                                                         value={agencyName}
                                                                         onChange={(e) => setagencyName(e.target.value)}
@@ -528,7 +528,7 @@ export default function Ranking() {
                                                             </div>
                                                             <div className="col">
                                                                 <div className="form-group ">
-                                                                    <label htmlFor="lname" className="form-label">Rank<span class="req-star">*</span></label>
+                                                                    <label htmlFor="lname" className="form-label">Rank<span className="req-star">*</span></label>
                                                                     <input required type="number" className="form-control" placeholder="" name="rank"
                                                                         value={rank}
                                                                         onChange={(e) => setrank(e.target.value)}
@@ -537,7 +537,7 @@ export default function Ranking() {
                                                             </div>
                                                             <div className="col">
                                                                 <div className="form-group ">
-                                                                    <label htmlFor="lname" className="form-label">Year<span class="req-star">*</span></label>
+                                                                    <label htmlFor="lname" className="form-label">Year<span className="req-star">*</span></label>
                                                                     <input required type="number" className="form-control" placeholder="" name="rank"
                                                                         value={year}
                                                                         onChange={(e) => setyear(e.target.value)}
@@ -552,13 +552,13 @@ export default function Ranking() {
                                                         <div className="row">
                                                             <div className="form-group ">
 
-                                                                <label htmlFor="fname" className="form-label">Certificate<span class="req-star">*</span>
+                                                                <label htmlFor="fname" className="form-label">Certificate<span className="req-star">*</span>
 
                                                                 </label>
 
                                                                 {/* <p>File extensions supported  .jpeg, .jpg, .png</p> */}
 
-                                                                <div className="ranking-certif"> <img src={certificate} alt="certificate" class="edit-certificate" /></div>
+                                                                <div className="ranking-certif"> <img src={certificate} alt="certificate" className="edit-certificate" /></div>
                                                                 <Dropzone onDrop={(acceptedFiles) => {
 
                                                                     setcertificate(acceptedFiles[0])
@@ -581,7 +581,7 @@ export default function Ranking() {
 
                                                                 <span style={{ color: "red" }}> {certificateError}</span>
 
-                                                                {/* <p Class="selected-certificate"> {certificate}</p> */}
+                                                                {/* <p className="selected-certificate"> {certificate}</p> */}
                                                             </div>
                                                         </div>
                                                     </div>

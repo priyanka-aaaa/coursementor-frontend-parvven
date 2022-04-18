@@ -7,6 +7,8 @@ import {
     faEnvelope, faGlobe, faCheckCircle, faAngleDown, faAngleUp
 
 } from '@fortawesome/free-solid-svg-icons';
+import { Modal, Button } from 'react-bootstrap';
+
 import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
 import Footer from './Footer'
@@ -30,7 +32,17 @@ export default function UniversityCourse() {
     const [submitSuccess, setsubmitSuccess] = useState("0");
     const [showSweetAlert, setshowSweetAlert] = useState("0");
     const [showErrorSweetAlert, setshowErrorSweetAlert] = useState("0");
+    const [showModal, setshowModal] = useState(false);
+    const [showLoginSweetAlert, setshowLoginSweetAlert] = useState("0");
 
+    // start for login
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [emailError, setemailError] = useState("");
+    const [passwordError, setpasswordError] = useState();
+    const [wrongPassword, setwrongPassword] = useState("");
+    const [wrongUsername, setwrongUsername] = useState("");
+    // end for login
     const [coursesNoValues, setcoursesNoValues] = useState("0");
     // const [myslug, setmyslug] = useState();
 
@@ -83,7 +95,7 @@ export default function UniversityCourse() {
                 .then(data => {
                     var id = data.universities[0]._id;
                     setuniversityId(id)
-                  
+
 
                     const url7 = process.env.REACT_APP_SERVER_URL + 'university/' + id + '/image';
                     fetch(url7, {
@@ -161,6 +173,12 @@ export default function UniversityCourse() {
     var divStyle = {
         backgroundImage: 'url(' + universityImageValues.coverPic + ')'
     }
+    function open() {
+        setshowModal(true)
+    }
+    function close() {
+        setshowModal(false)
+    }
     function handleClick() {
         if (down === "1") {
             setdown("0");
@@ -171,9 +189,58 @@ export default function UniversityCourse() {
             setup("0")
         }
     }
-    function handleApplyNow(universityID, courseID, session, applicationProgress, mycountry) {
+    function handleSubmit(event) {
+        setemailError("");
+        setpasswordError("");
+        setwrongUsername("")
+        setwrongPassword("")
+        event.preventDefault();
+        if (email === "") {
+            setemailError("Please enter email");
+        }
+        if (password === "") {
+            setPassword("Please enter password");
+        }
+        else {
+            setmyloader("true")
+            const obj = {
+                email: email,
+                password: password
+            };
+            var myurl = process.env.REACT_APP_SERVER_URL;
+            axios.post(myurl + 'student/login', obj)
+                .then(result => {
+                    let responseJson = result;
+                    setmyloader("false")
+                    if (responseJson.data.success === true) {
+
+                        setshowModal(false)
+
+                        localStorage.setItem('studentId', responseJson.data.student._id);
+                        localStorage.setItem('studentToken', responseJson.data.token);
+                        localStorage.setItem('studentName', responseJson.data.student.name);
+                        localStorage.setItem('studentEmail', responseJson.data.student.email);
+
+                        setshowLoginSweetAlert("1")
+                    }
+                    else {
+                        if (responseJson.data.message === "Password not matched") {
+                            setwrongPassword(" Please enter a correct password")
+                        }
+                        else {
+
+                            setwrongUsername("Please enter a correct email")
+                        }
+                    }
+                }
+                )
+                .catch(error => {
+                });
+        }
+    }
+    function handleApplyNow(universityID, courseID, session, applicationProgress, mycountry, universityName) {
         if (!localStorage.getItem("studentId")) {
-            alert("Please login first")
+            setshowModal(true)
         }
         else {
             var studentToken = localStorage.getItem("studentToken")
@@ -184,6 +251,7 @@ export default function UniversityCourse() {
                 session: session,
                 applicationProgress: applicationProgress,
                 country: mycountry,
+                universityName: universityName
             };
             axios.post(process.env.REACT_APP_SERVER_URL + 'student/applications', obj, { headers: { 'Authorization': studentToken } })
                 .then(function (res) {
@@ -350,7 +418,7 @@ export default function UniversityCourse() {
 
 
 
-                                                            <div className="col-sm-6 mb-4" key={index}>
+                                                            <div className="col-sm-6 mb-4" >
 
                                                                 <div>
                                                                     <div className="subcourses_courseBox__3deGG">
@@ -366,6 +434,15 @@ export default function UniversityCourse() {
                                                                             <div className="col-6 col-sm-4 clearfix">
                                                                                 <div className="subcourses_details__3g8AB">
                                                                                     <h3 className="subcourses_c-desc__Dzhnk">
+                                                                                        {element.currency === "GBP" ?
+                                                                                            <>£</>
+                                                                                            :
+                                                                                            element.currency === "EUR" ?
+                                                                                                <>€</>
+                                                                                                :
+                                                                                                <>$</>
+
+                                                                                        }
                                                                                         {element.tuitionFee}{" "}  {element.currency}
                                                                                     </h3>
                                                                                     <p className="subcourses_c-title__2MKAy">Fee</p>
@@ -373,15 +450,15 @@ export default function UniversityCourse() {
                                                                             </div>
                                                                             <div className="col-6 col-sm-4">
                                                                                 <div className="subcourses_details__3g8AB">
-                                                                                    <h3 className="subcourses_c-desc__Dzhnk">{element.duration}
+                                                                                    <h3 className="subcourses_c-desc__Dzhnk">{element.duration} Month
                                                                                     </h3>
                                                                                     <p className="subcourses_c-title__2MKAy">Duration</p>
                                                                                 </div>
                                                                             </div>
                                                                             <div className="col-6 col-sm-4">
                                                                                 <div className="subcourses_details__3g8AB">
-                                                                                    <h3 className="subcourses_c-desc__Dzhnk">{element.exam}</h3>
-                                                                                    <p className="subcourses_c-title__2MKAy">Qualification</p>
+                                                                                    <h3 className="subcourses_c-desc__Dzhnk">{element.english}</h3>
+                                                                                    <p className="subcourses_c-title__2MKAy">Education</p>
                                                                                 </div>
                                                                             </div>
                                                                             <div className="col-6 col-sm-4 mt-2">
@@ -410,7 +487,7 @@ export default function UniversityCourse() {
                                                                         </div>
                                                                     </div>
                                                                     <div className="text-right w-100">
-                                                                        <button className="btn btn-primary  w-100" onClick={() => handleApplyNow(universityId, element._id, element.year + element.month, "first", FormPrimaryInformationValues.country)}>Apply Now
+                                                                        <button className="btn btn-primary  w-100" onClick={() => handleApplyNow(universityId, element._id, element.year + element.month, "first", FormPrimaryInformationValues.country, FormPrimaryInformationValues.name)}>Apply Now
                                                                             <img
                                                                                 src="https://images.leverageedu.com/university/whitearrow.svg" />
                                                                         </button>
@@ -439,6 +516,57 @@ export default function UniversityCourse() {
                 <Footer />
 
             </div >
+            <Modal className="modal-container"
+                show={showModal}
+                onHide={() => close()}
+
+                animation={true}
+                bsSize="small">
+
+                <Modal.Header closeButton>
+                    <Modal.Title>Student Login Form</Modal.Title>
+                </Modal.Header>
+
+
+                <div className="from-start" >
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-3 mt-3">
+                            <label className="form-label">Email </label>
+                            <input type="email" className="form-control " id="email"
+                                placeholder="Enter email" name="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+
+                            <div style={{ color: "red" }}> {wrongUsername}</div>
+
+
+                        </div>
+                        <span style={{ color: "red" }}>{emailError}</span>
+                        <div className="mb-3 mt-3">
+                            <label className="form-label">Password</label>
+                            <input type="password" className="form-control " id="uname"
+                                placeholder="Password" name="name"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <div style={{ color: "red" }}> {wrongPassword}</div>
+                        </div>
+                        <span style={{ color: "red" }}> {passwordError}</span>
+                        <button type="submit" className="btn btn-website">Login</button>
+                    </form>
+
+                    <a onClick={() => open()} >     Forgot your Password?</a>
+
+                    <p>Don't have an account? Click here to
+                        <Link to={'/Universityregister'} className="" >
+                            Register</Link></p>
+
+                </div>
+
+
+
+            </Modal>
         </div >
     );
 };

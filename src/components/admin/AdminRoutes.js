@@ -2,6 +2,7 @@ import Dashboard from './Dashboard';
 import Student from './Student';
 import Agent from './Agent';
 import University from './University';
+import AdminUniversity from './AdminUniversity';
 import StudentApplication from './StudentApplication';
 import ApplicationStep from './ApplicationStep';
 const AdminRoutes = [
@@ -41,7 +42,13 @@ const AdminRoutes = [
     component: University,
     layout: "/admin",
   },
- 
+  {
+    path: "/adminUniversity",
+    name: "Typography",
+    icon: "nc-icon nc-paper-2",
+    component: AdminUniversity,
+    layout: "/admin",
+  },
   {
     path: "/applicationStep",
     name: "Typography",

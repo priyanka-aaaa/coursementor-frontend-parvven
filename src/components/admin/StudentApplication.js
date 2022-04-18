@@ -212,26 +212,29 @@ export default function AdminStudentApplication() {
     ];
     // end for pagination
     useEffect(() => {
+        var adminId = localStorage.getItem('adminId');
         var mounted = localStorage.getItem("adminToken")
         setMounted(mounted)
-        setfirstviewWidth("0px");
-        setsecondviewWidth("0px")
-        function mystudentApplications() {
-            setmyloader("true")
-            const url = process.env.REACT_APP_SERVER_URL + 'admin/studentApplications';
-            fetch(url, {
-                method: 'GET',
-                headers: { 'Authorization': mounted }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    setmyloader("false")
-
-                    setComments(data.applications);
+        if (adminId !== null) {
+            setfirstviewWidth("0px");
+            setsecondviewWidth("0px")
+            function mystudentApplications() {
+                setmyloader("true")
+                const url = process.env.REACT_APP_SERVER_URL + 'admin/studentApplications';
+                fetch(url, {
+                    method: 'GET',
+                    headers: { 'Authorization': mounted }
                 })
+                    .then(response => response.json())
+                    .then(data => {
+                        setmyloader("false")
 
+                        setComments(data.applications);
+                    })
+
+            }
+            mystudentApplications()
         }
-        mystudentApplications()
     }, [])
     function open() {
 
@@ -1364,15 +1367,16 @@ export default function AdminStudentApplication() {
                 });
         }
     }
-    function clickCheckboxHandler(value1, value2) {
+    function clickCheckboxHandler(value1, value2,myemail) {
 
 
         const obj = {
             applicationProgress: value1,
-            applicationProgressStep: value2
+            applicationProgressStep: value2,
+            email:myemail
         };
         axios.put(process.env.REACT_APP_SERVER_URL + 'admin/studentApplications/' + myviewApplicationId, obj, { headers: { 'Authorization': mounted } })
-            .then(function (res) {
+       .then(function (res) {
                 setmyloader("false")
                 if (res.data.success === true) {
                     setsuccessMessage("Application Step Updated")
@@ -1406,20 +1410,20 @@ export default function AdminStudentApplication() {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-header">
-                         <div className="row">
-                            <div className="col-md-6"></div>
-                            <div className="col-md-6 text-right">
-                                <div className="search-bar">
-                                <Search
-                                    onSearch={value => {
-                                        setSearch(value);
-                                        setCurrentPage(1);
-                                    }}
-                                />
+                            <div className="row">
+                                <div className="col-md-6"></div>
+                                <div className="col-md-6 text-right">
+                                    <div className="search-bar">
+                                        <Search
+                                            onSearch={value => {
+                                                setSearch(value);
+                                                setCurrentPage(1);
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                         </div>
-                            
+
                         </div>
                         <div className="card-body table-border-style">
                             <div className="table-responsive">
@@ -2161,58 +2165,58 @@ export default function AdminStudentApplication() {
                                                                                                         <div className="row">
                                                                                                             <div className="col-md-6"><h6>All Documents Gernate ZIP Folder</h6></div>
                                                                                                             <div className="col-md-6">
-                                                                                                            <button type="button" className="btn btn-outline-primary btn-download" onClick={downloadAllDocument}><span>
-                                                                                                        <FontAwesomeIcon icon={faCloudDownload} />
-                                                                                                    </span>Download All Document</button>
+                                                                                                                <button type="button" className="btn btn-outline-primary btn-download" onClick={downloadAllDocument}><span>
+                                                                                                                    <FontAwesomeIcon icon={faCloudDownload} />
+                                                                                                                </span>Download All Document</button>
                                                                                                             </div>
                                                                                                         </div>
-                                                                                                        </li>
-                                                                                                    <li>
-                                                                                                        <div class="doc-topheader">
-                                                                                                        <div className="row">
-                                                                                                            <div className="col-md-6"> <h5>Identity Documents</h5></div>
-                                                                                                            <div className="col-md-6 text-right">                                                                                                        
-                                                                                                                  <button type="button" className="btn btn-outline-primary btn-download" onClick={downloadIdentityDocument}><span>
-                                                                                                                <FontAwesomeIcon icon={faCloudDownload} />
-                                                                                                               </span>Download</button>                                                                                                            
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                        </div>
-                                                                                                       
-                                                                                                       <div className="row">
-                                                                                                           <div className="col-md-6">
-                                                                                                               <h6>Passport Front</h6>
-                                                                                                            </div>
-                                                                                                            <div className="col-md-6 text-right">
-                                                                                                            <FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentPassportDocument, passportExtenstion)} title="view document" className="btn btn-outline-primary" />
-                                                                                                            </div>
-                                                                                                       </div>
-
-                                                                                                       <div className="row">
-                                                                                                           <div className="col-md-6"><h6> Passport Back</h6></div>
-                                                                                                           <div className="col-md-6 text-right"><FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentPassportBackDocument, passportBackExtenstion)} title="view document" className="btn btn-outline-primary" /></div>
-                                                                                                       </div>
-
-                                                                                                       <div className="row">
-                                                                                                           <div className="col-md-6"><h6> CV </h6></div>
-                                                                                                           <div className="col-md-6 text-right"><FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentCVDocument, cvExtenstion)} title="view document" className="btn btn-outline-primary" /></div>
-                                                                                                       </div>
-                                                                                                           
-                                                                                                       
                                                                                                     </li>
                                                                                                     <li>
-                                                                                                    <div class="doc-topheader">
-                                                                                                        <div className="row">
-                                                                                                            <div className="col-md-6"><h4>Education Documents</h4> </div>
-                                                                                                            <div className="col-md-6">
-                                                                                                            <button type="button" className="btn btn-outline-primary btn-download" onClick={downloadEducation}><span>
-                                                                                                            <FontAwesomeIcon icon={faCloudDownload} />
-                                                                                                                  </span>Download</button>
+                                                                                                        <div className="doc-topheader">
+                                                                                                            <div className="row">
+                                                                                                                <div className="col-md-6"> <h5>Identity Documents</h5></div>
+                                                                                                                <div className="col-md-6 text-right">
+                                                                                                                    <button type="button" className="btn btn-outline-primary btn-download" onClick={downloadIdentityDocument}><span>
+                                                                                                                        <FontAwesomeIcon icon={faCloudDownload} />
+                                                                                                                    </span>Download</button>
+                                                                                                                </div>
                                                                                                             </div>
+                                                                                                        </div>
+
+                                                                                                        <div className="row">
+                                                                                                            <div className="col-md-6">
+                                                                                                                <h6>Passport Front</h6>
+                                                                                                            </div>
+                                                                                                            <div className="col-md-6 text-right">
+                                                                                                                <FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentPassportDocument, passportExtenstion)} title="view document" className="btn btn-outline-primary" />
+                                                                                                            </div>
+                                                                                                        </div>
+
+                                                                                                        <div className="row">
+                                                                                                            <div className="col-md-6"><h6> Passport Back</h6></div>
+                                                                                                            <div className="col-md-6 text-right"><FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentPassportBackDocument, passportBackExtenstion)} title="view document" className="btn btn-outline-primary" /></div>
+                                                                                                        </div>
+
+                                                                                                        <div className="row">
+                                                                                                            <div className="col-md-6"><h6> CV </h6></div>
+                                                                                                            <div className="col-md-6 text-right"><FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentCVDocument, cvExtenstion)} title="view document" className="btn btn-outline-primary" /></div>
+                                                                                                        </div>
+
+
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <div className="doc-topheader">
+                                                                                                            <div className="row">
+                                                                                                                <div className="col-md-6"><h4>Education Documents</h4> </div>
+                                                                                                                <div className="col-md-6">
+                                                                                                                    <button type="button" className="btn btn-outline-primary btn-download" onClick={downloadEducation}><span>
+                                                                                                                        <FontAwesomeIcon icon={faCloudDownload} />
+                                                                                                                    </span>Download</button>
+                                                                                                                </div>
                                                                                                             </div>
 
                                                                                                         </div>
-                                                                                                        
+
 
                                                                                                         <div className="row">
                                                                                                             <div className="col-md-6"><h6>10th Marksheet</h6></div>
@@ -2241,7 +2245,7 @@ export default function AdminStudentApplication() {
                                                                                                                 <h6>PG Degree Certificate</h6>
                                                                                                             </div>
                                                                                                             <div className="col-md-6 text-right">
-                                                                                                            <FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentpgDegreeDocument, pgDegreeExtenstion)} title="view document" className="btn btn-outline-primary" />
+                                                                                                                <FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentpgDegreeDocument, pgDegreeExtenstion)} title="view document" className="btn btn-outline-primary" />
                                                                                                             </div>
                                                                                                         </div>
 
@@ -2250,7 +2254,7 @@ export default function AdminStudentApplication() {
                                                                                                                 <h6> PG Consolidated Marksheet</h6>
                                                                                                             </div>
                                                                                                             <div className="col-md-6 text-right">
-                                                                                                            <FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentpgDegreeConsolidatedDocument, pgDegreeConsolidatedMarksheetExtenstion)} title="view document" className="btn btn-outline-primary" />        
+                                                                                                                <FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentpgDegreeConsolidatedDocument, pgDegreeConsolidatedMarksheetExtenstion)} title="view document" className="btn btn-outline-primary" />
                                                                                                             </div>
                                                                                                         </div>
 
@@ -2259,15 +2263,15 @@ export default function AdminStudentApplication() {
                                                                                                                 <h6>PG Marksheet </h6>
                                                                                                             </div>
                                                                                                             <div className="col-md-6 text-right">
-                                                                                                               <FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentpgMarksheetDocument, pgMarksheetExtenstion)} title="view document" className="btn btn-outline-primary" />
+                                                                                                                <FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentpgMarksheetDocument, pgMarksheetExtenstion)} title="view document" className="btn btn-outline-primary" />
                                                                                                             </div>
                                                                                                         </div>
 
-                                                                                                        
 
-                                                                                                     
 
-                                                                                                   </li>
+
+
+                                                                                                    </li>
                                                                                                     <li> Work Experience Documents
                                                                                                         <FontAwesomeIcon icon={faEye} onClick={() => viewSingleDocument(studentExperienceDocument, experienceDocumentExtenstion)} title="view document" className="btn btn-outline-primary" />
 
@@ -2449,8 +2453,8 @@ export default function AdminStudentApplication() {
                                                                     {universityApplication.map((object, i) => {
                                                                         return (
                                                                             <div key={i}>
-                                                                                <li className="state-comp"><input type="checkbox" defaultChecked
-                                                                                    onChange={() => clickCheckboxHandler(object, i)}
+                                                                                <li className="state-comp"><input type="checkbox"
+                                                                                    onChange={() => clickCheckboxHandler(object, i,myemail)}
 
                                                                                 />{object}
                                                                                 </li>

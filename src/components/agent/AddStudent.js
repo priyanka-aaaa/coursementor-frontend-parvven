@@ -65,6 +65,7 @@ function AddStudent(props) {
         var agentId = localStorage.getItem('agentId');
         var mounted = localStorage.getItem('agentToken');
         setMounted(mounted)
+        if (agentId !== null) {
         axios.get(process.env.REACT_APP_SERVER_URL + 'countries/')
             .then(function (res) {
                 if (res.data.success === true) {
@@ -80,6 +81,7 @@ function AddStudent(props) {
             })
             .catch(error => {
             });
+        }
 
     }, [])
     function setapplicationCountry(value) {

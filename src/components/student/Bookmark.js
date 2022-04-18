@@ -16,8 +16,10 @@ export default function Bookmark() {
 
 
   useEffect(() => {
+    var studentId = localStorage.getItem('studentId');
     var mounted = localStorage.getItem("studentToken")
     setMounted(mounted)
+    if (studentId !== null) {
     const url = process.env.REACT_APP_SERVER_URL + 'student/bookmarks';
     fetch(url, {
       method: 'GET',
@@ -33,6 +35,7 @@ export default function Bookmark() {
           setshowBookmark("1")
         }
       })
+    }
   }, [])
   function onHandleUnBookmark(value) {
     setdeleteId(value)
@@ -101,7 +104,7 @@ export default function Bookmark() {
                         </span>
                         <div className="bool-markcontent">
                           <Link to={'/schools/' + object.slug} target="_blank" >
-                            <h5>Unversity</h5>
+                            <h5>University</h5>
                             <p>{object.name}</p>
                           </Link>
                           <a href="#" className="btn btn-outline-danger" onClick={() => onHandleUnBookmark(object.universityID)} >UnBookmark</a>

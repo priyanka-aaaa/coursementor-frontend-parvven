@@ -5453,10 +5453,10 @@ ul.privacy-content {
   border-radius: 30px 30px 30px 30px;
 }
 
-.rs-faq .faq-content .accordion .card .card-header .card-link.collapsed:after {
+/* .rs-faq .faq-content .accordion .card .card-header .card-link.collapsed:after {
   color: #ffffff;
   content: "\f067";
-}
+} */
 
 .rs-faq .faq-content .accordion .card .card-body {
   color: #101010;
@@ -12338,9 +12338,7 @@ p.selected-certificate {
 }
 
 
-a.card-header.card-link.collapsed:before {
-  display: none;
-}
+
 
 .card {
   margin-bottom: 9px;
@@ -12463,27 +12461,14 @@ section#filterSection {
   padding: 20px;
 }
 
-section#filterSection a.card-link.collapsed.card-header {
+/* section#filterSection a.card-link.collapsed.card-header {
   padding: 7px 14px;
   font-size: 13px;
   background-color: transparent;
-}
+} */
 
-section#filterSection a.card-header.card-link.collapsed:after {
-  content: "\f077";
-  color: #000;
-  position: absolute;
-  font-family: "Font Awesome";
-  /* font-weight: 900; */
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  right: 20px;
-  font-size: 10px;
-  top: 14px;
-}
+
+
 
 .search-country .form-group {
   border: 1px solid #ccc;

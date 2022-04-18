@@ -366,7 +366,7 @@ export default function Scholarship() {
                                                                         name="universityApplication"
                                                                         onChange={event => this.changeHandler(event)}
 
-                                                                        class="scholarshipTrixAdd form-control editarea addhelpSCHOLARSHIP"
+                                                                        className="scholarshipTrixAdd form-control editarea addhelpSCHOLARSHIP"
                                                                         input="addx"
                                                                     >
                                                                     </trix-editor>
@@ -454,7 +454,7 @@ export default function Scholarship() {
                                                                     <input id="editx" type="hidden" />
                                                                     <trix-editor
                                                                         name="universityApplication"
-                                                                        onChange={event => this.changeHandler(event)} class="scholarshipTrixEdit form-control editarea helpeditSCHOLARSHIP"
+                                                                        onChange={event => this.changeHandler(event)} className="scholarshipTrixEdit form-control editarea helpeditSCHOLARSHIP"
                                                                         input="editx"
                                                                     >
                                                                           {parse(MYpoint)}

@@ -12,10 +12,12 @@ import { Modal, Button } from 'react-bootstrap';
 export default function Courses() {
     const [arrayEnglish, setarrayEnglish] = useState([]);
     const [arrayExam, setarrayExam] = useState([]);
+    const [myallEnglish, setmyallEnglish] = useState([]);
+    const [englishError, setenglishError] = useState([]);
+    const [examError, setexamError] = useState([]);
 
-    const [myallGroupsUserSpecific, setmyallGroupsUserSpecific] = useState([]);
-    const [myallGroupsExamUserSpecific, setmyallGroupsExamUserSpecific] = useState([]);
 
+    const [myallExam, setmyallExam] = useState([]);
     const [userinfo, setUserInfo] = useState({
         univeristyEnglishProficiency: [],
         response: [],
@@ -27,11 +29,7 @@ export default function Courses() {
     const [courseName, setcourseName] = useState("");
     const [duration, setduration] = useState("");
     const [tuitionFee, settuitionFee] = useState("");
-
-
     const [descriptionPopupValue, setdescriptionPopupValue] = useState("");
-
-
     const [currency, setcurrency] = useState("");
     const [courseLevel, setcourseLevel] = useState("");
     const [cgpa, setcgpa] = useState("");
@@ -62,9 +60,7 @@ export default function Courses() {
     const [tuitionFeeNoError, settuitionFeeNoError] = useState("");
     const [showModal, setshowModal] = useState(false);
     const [showDescriptionModal, setshowDescriptionModal] = useState(false);
-
     const [areaOfInterest, setareaOfInterest] = useState(false);
-
     // start for pagination
     const [comments, setComments] = useState([]);
     const [totalItems, setTotalItems] = useState(0);
@@ -82,6 +78,66 @@ export default function Courses() {
         { name: "Action", field: "", sortable: false },
     ];
     // end for pagination
+    useEffect(() => {
+        var universityId = localStorage.getItem('universityId');
+        var mounted = localStorage.getItem('universityToken');
+        setmounted(mounted)
+        setuniversityId(universityId)
+        if (universityId !== null) {
+            const url = process.env.REACT_APP_SERVER_URL + 'university/' + universityId + '/courses';
+            fetch(url, {
+                method: 'GET',
+                headers: { 'Authorization': mounted }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    setComments(data.universityCourses);
+                    var student_universityCourse = data.universityCourses;
+                    if (Object.keys(student_universityCourse).length !== 0) {
+                    }
+                    else {
+                    }
+                    let buildEnglishArray = [
+                        { "id": "IELTS", "name": "IELTS" },
+                        { "id": "TOEFL", "name": "TOEFL" },
+                        { "id": "Duolingo", "name": "Duolingo" },
+                        { "id": "CPE", "name": "CPE" },
+                        { "id": "CAE", "name": "CAE" },
+                        { "id": "OET", "name": "OET" }
+
+                    ];
+                    let allGroupsUserSpecific1 = buildEnglishArray.map(group => (
+                        { ...group, following: arrayEnglish.includes(group.id) })
+                    );
+                    setmyallEnglish(allGroupsUserSpecific1)
+                    let buildExamArray = [
+                        { "id": "GRE", "name": "GRE" },
+                        { "id": "GMAT", "name": "GMAT" },
+                        { "id": "SAT", "name": "SAT" },
+                        { "id": "Other", "name": "Other" }
+                    ];
+                    let allGroupsUserSpecific2 = buildExamArray.map(group => (
+                        { ...group, following: arrayExam.includes(group.id) })
+                    );
+                    setmyallExam(allGroupsUserSpecific2)
+                })
+            const url2 = process.env.REACT_APP_SERVER_URL + 'university/' + universityId + '/intakes';
+            fetch(url2, {
+                method: 'GET',
+                headers: { 'Authorization': mounted }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var myresults = data.universityIntakes
+                    if (Object.keys(myresults).length === 0) {
+
+                    }
+                    else {
+                        setIntakedata(data.universityIntakes)
+                    }
+                })
+        }
+    }, [])
     function open() {
         setshowModal(true)
     }
@@ -105,8 +161,8 @@ export default function Courses() {
         }
         else {
             var mycheckboxValue = e.target.value
-            var filteredArray = arrayEnglish.filter(e => e !== mycheckboxValue)
-            let allGroups1 = [
+            var filteredEnglishArray = arrayEnglish.filter(e => e !== mycheckboxValue)
+            let buildEnglishArray = [
                 { "id": "IELTS", "name": "IELTS" },
                 { "id": "TOEFL", "name": "TOEFL" },
                 { "id": "Duolingo", "name": "Duolingo" },
@@ -115,11 +171,11 @@ export default function Courses() {
                 { "id": "OET", "name": "OET" }
 
             ];
-            let allGroupsUserSpecific1 = allGroups1.map(group => (
-                { ...group, following: filteredArray.includes(group.id) })
+            let allGroupsUserSpecific1 = buildEnglishArray.map(group => (
+                { ...group, following: filteredEnglishArray.includes(group.id) })
             );
-            setmyallGroupsUserSpecific(allGroupsUserSpecific1)
-            setarrayEnglish(filteredArray)
+            setmyallEnglish(allGroupsUserSpecific1)
+            setarrayEnglish(filteredEnglishArray)
         }
     };
     const handleuniveristyExamChange = (e) => {
@@ -130,105 +186,23 @@ export default function Courses() {
         }
         else {
             var mycheckboxValue = e.target.value
-            var filteredArray = arrayExam.filter(e => e !== mycheckboxValue)
-            let allGroups1 = [
-                { "id": "IELTS", "name": "IELTS" },
-                { "id": "TOEFL", "name": "TOEFL" },
-                { "id": "Duolingo", "name": "Duolingo" },
-                { "id": "CPE", "name": "CPE" },
-                { "id": "CAE", "name": "CAE" },
-                { "id": "OET", "name": "OET" }
-
+            var filteredExamArray = arrayExam.filter(e => e !== mycheckboxValue)
+            let buildExamArray = [
+                { "id": "GRE", "name": "GRE" },
+                { "id": "GMAT", "name": "GMAT" },
+                { "id": "SAT", "name": "SAT" },
+                { "id": "Other", "name": "Other" }
             ];
-            let allGroupsExamUserSpecific1 = allGroups1.map(group => (
-                { ...group, following: filteredArray.includes(group.id) })
+            let allGroupsUserSpecific2 = buildExamArray.map(group => (
+                { ...group, following: arrayExam.includes(group.id) })
             );
-            setmyallGroupsExamUserSpecific(allGroupsExamUserSpecific1)
-            setarrayExam(filteredArray)
+            setarrayExam(filteredExamArray)
+
+            setmyallExam(allGroupsUserSpecific2)
+
         }
     };
-    useEffect(() => {
-        var universityId = localStorage.getItem('universityId');
-        var mounted = localStorage.getItem('universityToken');
-        setmounted(mounted)
-        setuniversityId(universityId)
-        if (universityId !== null) {
-            const url = process.env.REACT_APP_SERVER_URL + 'university/' + universityId + '/courses';
-            fetch(url, {
-                method: 'GET',
-                headers: { 'Authorization': mounted }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    setComments(data.universityCourses);
-                    var student_universityOverview = data.universityCourses;
-                    if (Object.keys(student_universityOverview).length !== 0) {
-                        let allGroups1 = [
-                            { "id": "IELTS", "name": "IELTS" },
-                            { "id": "TOEFL", "name": "TOEFL" },
-                            { "id": "Duolingo", "name": "Duolingo" },
-                            { "id": "CPE", "name": "CPE" },
-                            { "id": "CAE", "name": "CAE" },
-                            { "id": "OET", "name": "OET" }
-                        ];
-                        let allGroupsUserSpecific1 = allGroups1.map(group => (
-                            { ...group, following: arrayEnglish.includes(group.id) })
-                        );
-                        setmyallGroupsUserSpecific(allGroupsUserSpecific1)
-                        let allGroups2 = [
-                            { "id": "GRE", "name": "GRE" },
-                            { "id": "GMAT", "name": "GMAT" },
-                            { "id": "SAT", "name": "SAT" },
-                            { "id": "Other", "name": "Other" }
-                        ];
-                        let allGroupsUserSpecific2 = allGroups2.map(group => (
-                            { ...group, following: arrayExam.includes(group.id) })
-                        );
-                        setmyallGroupsExamUserSpecific(allGroupsUserSpecific2)
-                    }
-                    else {
-                        let allGroups1 = [
-                            { "id": "IELTS", "name": "IELTS" },
-                            { "id": "TOEFL", "name": "TOEFL" },
-                            { "id": "Duolingo", "name": "Duolingo" },
-                            { "id": "CPE", "name": "CPE" },
-                            { "id": "CAE", "name": "CAE" },
-                            { "id": "OET", "name": "OET" }
 
-                        ];
-                        let allGroupsUserSpecific1 = allGroups1.map(group => (
-                            { ...group, following: arrayEnglish.includes(group.id) })
-                        );
-                        setmyallGroupsUserSpecific(allGroupsUserSpecific1)
-                        let allGroups2 = [
-                            { "id": "GRE", "name": "GRE" },
-                            { "id": "GMAT", "name": "GMAT" },
-                            { "id": "SAT", "name": "SAT" },
-                            { "id": "Other", "name": "Other" }
-                        ];
-                        let allGroupsUserSpecific2 = allGroups2.map(group => (
-                            { ...group, following: arrayExam.includes(group.id) })
-                        );
-                        setmyallGroupsExamUserSpecific(allGroupsUserSpecific2)
-                    }
-                })
-            const url2 = process.env.REACT_APP_SERVER_URL + 'university/' + universityId + '/intakes';
-            fetch(url2, {
-                method: 'GET',
-                headers: { 'Authorization': mounted }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    var myresults = data.universityIntakes
-                    if (Object.keys(myresults).length === 0) {
-
-                    }
-                    else {
-                        setIntakedata(data.universityIntakes)
-                    }
-                })
-        }
-    }, [])
     // start for pagination
     const commentsData = useMemo(() => {
         let computedComments = comments;
@@ -241,9 +215,7 @@ export default function Courses() {
                     comment._id.toLowerCase().includes(search.toLowerCase())
             );
         }
-
         setTotalItems(computedComments.length);
-
         //Sorting comments
         if (sorting.field) {
             const reversed = sorting.order === "asc" ? 1 : -1;
@@ -252,7 +224,6 @@ export default function Courses() {
                     reversed * a[sorting.field].localeCompare(b[sorting.field])
             );
         }
-
         //Current Page slice
         return computedComments.slice(
             (currentPage - 1) * ITEMS_PER_PAGE,
@@ -261,7 +232,6 @@ export default function Courses() {
     }, [comments, currentPage, search, sorting]);
     // end for pagination
     let handleIntakeSubmit = (event) => {
-
         event.preventDefault();
         setshowModal(false)
         setmyloader("true")
@@ -273,13 +243,11 @@ export default function Courses() {
             .then(function (res) {
                 setmyloader("false")
                 if (res.data.success === true) {
-
                     setsuccessIntakeMessage("Intake add")
                     setTimeout(() => setsuccessIntakeMessage(""), 3000);
                     setsuccessIntakeMessage(1)
                     setyear("");
                     setmonth("");
-
                     const url = process.env.REACT_APP_SERVER_URL + 'university/' + universityId + '/intakes';
                     fetch(url, {
                         method: 'GET',
@@ -295,6 +263,8 @@ export default function Courses() {
             });
     }
     function handleClick(value) {
+        setexamError("")
+        setenglishError("")
         seteditId(value);
         setwidth("90%");
         axios.get(process.env.REACT_APP_SERVER_URL + 'university/' + universityId + '/courses/' + value, { headers: { 'Authorization': mounted } })
@@ -309,49 +279,41 @@ export default function Courses() {
                     setcgpa(myuniversityCourse.cgpa);
                     seteligibility(myuniversityCourse.eligibility);
                     var universityenglish = myuniversityCourse.english
-                    var myArray = universityenglish.split(",");
-                    let allGroups1 = [
+                    var myArray = universityenglish;
+                    let buildEnglishArray = [
                         { "id": "IELTS", "name": "IELTS" },
                         { "id": "TOEFL", "name": "TOEFL" },
                         { "id": "Duolingo", "name": "Duolingo" },
                         { "id": "CPE", "name": "CPE" },
                         { "id": "CAE", "name": "CAE" },
                         { "id": "OET", "name": "OET" }
-
                     ];
-                    let allGroupsUserSpecific1 = allGroups1.map(group => (
+                    let allGroupsUserSpecific1 = buildEnglishArray.map(group => (
                         { ...group, following: myArray.includes(group.id) })
                     );
-                    setmyallGroupsUserSpecific(allGroupsUserSpecific1)
+                    setmyallEnglish(allGroupsUserSpecific1)
                     // start for exam
-                    setexam(myuniversityCourse.exam);
-                    var universityenglish = myuniversityCourse.exam
-                    var myArray = universityenglish.split(",");
-                    let allGroups2 = [
+                    var universityexam = myuniversityCourse.exam
+                    var myExamArray = universityexam;
+                    let buildExamArray = [
                         { "id": "GRE", "name": "GRE" },
                         { "id": "GMAT", "name": "GMAT" },
                         { "id": "SAT", "name": "SAT" },
                         { "id": "Other", "name": "Other" }
                     ];
-                    let allGroupsUserSpecific2 = allGroups2.map(group => (
-                        { ...group, following: arrayExam.includes(group.id) })
+                    let allGroupsUserSpecific2 = buildExamArray.map(group => (
+                        { ...group, following: myExamArray.includes(group.id) })
                     );
-                    setmyallGroupsExamUserSpecific(allGroupsUserSpecific2)
-
-
-
+                    setmyallExam(allGroupsUserSpecific2)
                     // end for exam
-
                     setwebsite(myuniversityCourse.website);
                     setdescription(myuniversityCourse.description);
-
                     setyear(myuniversityCourse.year);
                     setmonth(myuniversityCourse.month);
                     setareaOfInterest(myuniversityCourse.areaOfInterest);
                     var universityexam = myuniversityCourse.exam
                     var myArray2 = universityexam.split(",");
                     setarrayExam(myArray2)
-
                 }
             })
             .catch(error => {
@@ -362,7 +324,6 @@ export default function Courses() {
         setcourseName("");
         setduration("")
         settuitionFee("");
-
         setcurrency("");
         setcourseLevel("");
         setcgpa("");
@@ -374,6 +335,8 @@ export default function Courses() {
         setyear("");
         setmonth("");
         setareaOfInterest("")
+        setexamError("")
+        setenglishError("")
     }
     function handleDelete(value) {
         setshowSweetAlert("1")
@@ -390,7 +353,6 @@ export default function Courses() {
                     setcourseName(myuniversityCourse.courseName);
                     setduration(myuniversityCourse.duration);
                     settuitionFee(myuniversityCourse.tuitionFee);
-
                     setcurrency(myuniversityCourse.currency);
                     setcourseLevel(myuniversityCourse.courseLevel);
                     setcgpa(myuniversityCourse.cgpa);
@@ -425,25 +387,26 @@ export default function Courses() {
         if (myPattern.test(tuitionFee) === false) {
             settuitionFeeNoError("Please Enter Only Number")
         }
+        else if (Object.keys(arrayEnglish).length === 0) {
+            setenglishError("Please Select English")
+        }
+        else if (Object.keys(arrayExam).length === 0) {
+            setexamError("Please Select Exam")
+        }
         else {
             setmyloader("true")
-            var enlishProficiencyArray = userinfo.response;
-            var englishProficiencyString = enlishProficiencyArray.toString()
-            var examArray = UserInfoExam.response;
-            var examString = examArray.toString()
             const obj = {
                 courseName: courseName,
                 duration: duration,
                 tuitionFee: tuitionFee,
-
                 currency: currency,
                 courseLevel: courseLevel,
                 cgpa: cgpa,
                 eligibility: eligibility,
-                english: englishProficiencyString,
+                english: arrayEnglish,
                 website: website,
                 description: description,
-                exam: examString,
+                exam: arrayExam,
                 year: year,
                 month: month,
                 areaOfInterest: areaOfInterest
@@ -478,27 +441,28 @@ export default function Courses() {
         if (myPattern.test(tuitionFee) === false) {
             settuitionFeeNoError("Please Enter Only Number")
         }
+        else if (Object.keys(arrayEnglish).length === 0) {
+            setenglishError("Please Select English")
+        }
+        else if (Object.keys(arrayExam).length === 0) {
+            setexamError("Please Select Exam")
+        }
         else {
-
             setmyloader("true")
             var enlishProficiencyArray = arrayEnglish;
-            var englishProficiencyString = enlishProficiencyArray.toString()
             var examArray = arrayExam;
-            var examString = examArray.toString()
-
             const obj = {
                 courseName: courseName,
                 duration: duration,
                 tuitionFee: tuitionFee,
-
                 currency: currency,
                 courseLevel: courseLevel,
                 cgpa: cgpa,
                 eligibility: eligibility,
-                english: englishProficiencyString,
+                english: enlishProficiencyArray,
                 website: website,
                 description: description,
-                exam: examString,
+                exam: examArray,
                 year: intakeyear,
                 month: intakemonth,
                 areaOfInterest: areaOfInterest
@@ -769,7 +733,7 @@ export default function Courses() {
                                                             </div>
 
                                                             <div className="mb-3">
-                                                                <div className="row">                                                                
+                                                                <div className="row">
                                                                     <div className="col-md-12">
                                                                         <div className="row">
                                                                             <div className="col">
@@ -809,27 +773,29 @@ export default function Courses() {
                                                                                 </div>
                                                                             </div>
                                                                             <div className="col">
-                                                                            <div className="form-group"><label >English Proficiency<span className="req-star">*</span>
-                                                                        </label>
-                                                                            {myallGroupsUserSpecific.map((element, index) => (
-                                                                                <div key={index}>
-                                                                                    {element.following === true ?
-                                                                                        <>
-                                                                                            {element.name}<input type="checkbox" name="univeristyEnglishProficiency"
-                                                                                                value={element.name} checked
-                                                                                                onChange={handleuniveristyEnglishProficiencyChange} />
-                                                                                        </>
-                                                                                        :
-                                                                                        <>
-                                                                                            {element.name}<input type="checkbox" name="univeristyEnglishProficiency"
-                                                                                                value={element.name}
-                                                                                                onChange={handleuniveristyEnglishProficiencyChange} />
-                                                                                        </>
-                                                                                    }
-                                                                                </div>
-                                                                            ))}
+                                                                                <div className="form-group"><label >English Proficiency<span className="req-star">*</span>
+                                                                                </label>
+                                                                                    {myallEnglish.map((element, index) => (
+                                                                                        <div key={index}>
+                                                                                            {element.following === true ?
+                                                                                                <>
+                                                                                                    {element.name}<input type="checkbox" name="univeristyEnglishProficiency"
+                                                                                                        value={element.name} checked
+                                                                                                        onChange={handleuniveristyEnglishProficiencyChange} />
+                                                                                                </>
+                                                                                                :
+                                                                                                <>
+                                                                                                    {element.name}<input type="checkbox" name="univeristyEnglishProficiency"
+                                                                                                        value={element.name}
+                                                                                                        onChange={handleuniveristyEnglishProficiencyChange} />
+                                                                                                </>
+                                                                                            }
+                                                                                        </div>
+                                                                                    ))}
 
-                                                                        </div>
+                                                                                </div>
+
+                                                                                <span style={{ color: "red" }}> {englishError}</span>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -837,7 +803,7 @@ export default function Courses() {
                                                             </div>
 
                                                             <div className="mb-3">
-                                                                <div className="row">                                                                   
+                                                                <div className="row">
                                                                     <div className="col-12 col-sm-4 col-md-4 col-lg-4">
                                                                         <div className="form-group">
                                                                             <label>Course Website<span className="req-star">*</span></label><input
@@ -879,7 +845,7 @@ export default function Courses() {
                                                                     <div className="col-12 col-sm-4 col-md-4 col-lg-4">
                                                                         <div className="form-group"><label
                                                                         >Academic proficiency exam<span className="req-star">*</span></label>
-                                                                            {myallGroupsExamUserSpecific.map((element, index) => (
+                                                                            {myallExam.map((element, index) => (
                                                                                 <div key={index}>
                                                                                     {element.following === true ?
                                                                                         <>
@@ -897,6 +863,7 @@ export default function Courses() {
                                                                                 </div>
                                                                             ))}
                                                                         </div>
+                                                                        <span style={{ color: "red" }}> {examError}</span>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -912,7 +879,7 @@ export default function Courses() {
                                                                             ></textarea>
                                                                         </div>
                                                                     </div>
-                                                                  
+
                                                                 </div>
                                                             </div>
                                                             <div className="mb-3">
@@ -931,7 +898,7 @@ export default function Courses() {
                                                                                 {Intakedata.map((object, i) => {
 
                                                                                     return (
-                                                                                        <option value={object.year + "&&" + object.month}>{object.year + " " + object.month}</option>
+                                                                                        <option key={i} value={object.year + "&&" + object.month}>{object.year + " " + object.month}</option>
                                                                                     )
                                                                                 })}
 
@@ -1053,7 +1020,7 @@ export default function Courses() {
                                                             </div>
 
                                                             <div className="mb-3">
-                                                                <div className="row">                                    
+                                                                <div className="row">
                                                                     <div className="col-md-12">
                                                                         <div className="row">
 
@@ -1096,28 +1063,29 @@ export default function Courses() {
                                                                                 </div>
                                                                             </div>
                                                                             <div className="col-md-4">
-                                                                            <div className="form-group"><label >English Proficiency<span className="req-star">*</span>
-                                                                        </label>
-                                                                        <div className="checkgrp">
-                                                                            {myallGroupsUserSpecific.map((element, index) => (
-                                                                                <div key={index}>
-                                                                                    {element.following === true ?
-                                                                                        <>
-                                                                                            <input type="checkbox" name="univeristyEnglishProficiency"
-                                                                                                value={element.name} checked
-                                                                                                onChange={handleuniveristyEnglishProficiencyChange} />{element.name}
-                                                                                        </>
-                                                                                        :
-                                                                                        <>
-                                                                                            <input type="checkbox" name="univeristyEnglishProficiency"
-                                                                                                value={element.name}
-                                                                                                onChange={handleuniveristyEnglishProficiencyChange} />{element.name}
-                                                                                        </>
-                                                                                    }
+                                                                                <div className="form-group"><label >English Proficiency<span className="req-star">*</span>
+                                                                                </label>
+                                                                                    <div className="checkgrp">
+                                                                                        {myallEnglish.map((element, index) => (
+                                                                                            <div key={index}>
+                                                                                                {element.following === true ?
+                                                                                                    <>
+                                                                                                        <input type="checkbox" name="univeristyEnglishProficiency"
+                                                                                                            value={element.name} checked
+                                                                                                            onChange={handleuniveristyEnglishProficiencyChange} />{element.name}
+                                                                                                    </>
+                                                                                                    :
+                                                                                                    <>
+                                                                                                        <input type="checkbox" name="univeristyEnglishProficiency"
+                                                                                                            value={element.name}
+                                                                                                            onChange={handleuniveristyEnglishProficiencyChange} />{element.name}
+                                                                                                    </>
+                                                                                                }
+                                                                                            </div>
+                                                                                        ))}
+                                                                                    </div>
+                                                                                    <span style={{ color: "red" }}> {englishError}</span>
                                                                                 </div>
-                                                                            ))}
-                                                                        </div>
-                                                                        </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1125,7 +1093,7 @@ export default function Courses() {
                                                             </div>
 
                                                             <div className="mb-3">
-                                                                <div className="row">                                                                 
+                                                                <div className="row">
                                                                     <div className="col-12 ol-sm-4 col-md-4 col-lg-4">
                                                                         <div className="form-group">
                                                                             <label>Course website<span className="req-star">*</span></label><input
@@ -1169,25 +1137,26 @@ export default function Courses() {
                                                                     <div className="col-12 col-sm-4 col-md-4 col-lg-4">
                                                                         <div className="form-group"><label
                                                                         >Academic proficiency exam<span className="req-star">*</span></label>
-                                                                        <div className="checkgrp">
-                                                                            {myallGroupsExamUserSpecific.map((element, index) => (
-                                                                                <div key={index}>
-                                                                                    {element.following === true ?
-                                                                                        <>
-                                                                                            <input type="checkbox" name="univeristyExam"
-                                                                                                value={element.name} checked
-                                                                                                onChange={handleuniveristyExamChange} />{element.name}
-                                                                                        </>
-                                                                                        :
-                                                                                        <>
-                                                                                            <input type="checkbox" name="univeristyExam"
-                                                                                                value={element.name}
-                                                                                                onChange={handleuniveristyExamChange} />{element.name}
-                                                                                        </>
-                                                                                    }
-                                                                                </div>
-                                                                            ))}
+                                                                            <div className="checkgrp">
+                                                                                {myallExam.map((element, index) => (
+                                                                                    <div key={index}>
+                                                                                        {element.following === true ?
+                                                                                            <>
+                                                                                                <input type="checkbox" name="univeristyExam"
+                                                                                                    value={element.name} checked
+                                                                                                    onChange={handleuniveristyExamChange} />{element.name}
+                                                                                            </>
+                                                                                            :
+                                                                                            <>
+                                                                                                <input type="checkbox" name="univeristyExam"
+                                                                                                    value={element.name}
+                                                                                                    onChange={handleuniveristyExamChange} />{element.name}
+                                                                                            </>
+                                                                                        }
+                                                                                    </div>
+                                                                                ))}
                                                                             </div>
+                                                                            <span style={{ color: "red" }}> {examError}</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1203,30 +1172,7 @@ export default function Courses() {
                                                                             ></textarea>
                                                                         </div>
                                                                     </div>
-                                                                    {/* <div className="col-12 col-sm-6 col-md-6 col-lg-6">
-                                                                        <div className="form-group"><label
-                                                                        >Academic proficiency exam<span className="req-star">*</span></label>
-                                                                        <div className="checkgrp">
-                                                                            {myallGroupsExamUserSpecific.map((element, index) => (
-                                                                                <div key={index}>
-                                                                                    {element.following === true ?
-                                                                                        <>
-                                                                                            <input type="checkbox" name="univeristyExam"
-                                                                                                value={element.name} checked
-                                                                                                onChange={handleuniveristyExamChange} />{element.name}
-                                                                                        </>
-                                                                                        :
-                                                                                        <>
-                                                                                            <input type="checkbox" name="univeristyExam"
-                                                                                                value={element.name}
-                                                                                                onChange={handleuniveristyExamChange} />{element.name}
-                                                                                        </>
-                                                                                    }
-                                                                                </div>
-                                                                            ))}
-                                                                            </div>
-                                                                        </div>
-                                                                    </div> */}
+
                                                                 </div>
                                                             </div>
                                                             <div className="mb-3">
@@ -1246,7 +1192,7 @@ export default function Courses() {
                                                                                 {Intakedata.map((object, i) => {
 
                                                                                     return (
-                                                                                        <option value={object.year + "&&" + object.month}>{object.year + " " + object.month}</option>
+                                                                                        <option key={i} value={object.year + "&&" + object.month}>{object.year + " " + object.month}</option>
                                                                                     )
                                                                                 })}
 
@@ -1326,19 +1272,19 @@ export default function Courses() {
 
 
                                                         <td>{courseName}</td>
-                                                        <td>{duration}</td>
+                                                        <td>{duration} month</td>
                                                         <td>{tuitionFee + " " + currency}</td>
 
 
 
                                                         <td>{courseLevel}</td>
                                                         <td>{cgpa}</td>
-                                                        <td>{eligibility}</td>
+                                                        <td>{eligibility} %</td>
                                                         <td>{english}</td>
 
                                                         <td>{website}</td>
                                                         <td>{areaOfInterest}</td>
-                                                       
+
                                                         <td>
                                                             <p
                                                                 onClick={() => toggleReadMore(description)}

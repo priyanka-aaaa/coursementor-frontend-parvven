@@ -36,8 +36,10 @@ export default function OtherDocument() {
     const [up, setup] = useState("0");
  
     useEffect(() => {
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
+        if (studentId !== null) {
         function otherAllDetails() {
             fetch(process.env.REACT_APP_SERVER_URL + 'student/otherDocument', {
                 method: 'get',
@@ -59,6 +61,7 @@ export default function OtherDocument() {
                 })
         }
         otherAllDetails()
+    }
     }, [])
     function handleClick() {
         if (down === "1") {

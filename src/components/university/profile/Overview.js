@@ -6,7 +6,7 @@ import {
     faAngleDown, faAngleUp
 } from '@fortawesome/free-solid-svg-icons';
 export default function Overview() {
-
+    const [myallEnglish, setmyallEnglish] = useState([]);
     const [arrayEnglish, setarrayEnglish] = useState([]);
     const [myallGroupsUserSpecific, setmyallGroupsUserSpecific] = useState([]);
     const [mounted, setMounted] = useState();
@@ -55,9 +55,7 @@ export default function Overview() {
                     if (res.data.success === true) {
 
                         var student_universityOverview = res.data.universityOverview;
-                        var universityenglish = student_universityOverview.english
-                        var myArray = universityenglish.split(",");
-                        setarrayEnglish(myArray)
+
                         setfoundedYear(student_universityOverview.foundedYear);
                         setranking(student_universityOverview.ranking);
                         setrate(student_universityOverview.rate);
@@ -68,19 +66,22 @@ export default function Overview() {
                         setenglish(student_universityOverview.english);
                         setcgpa(student_universityOverview.cgpa);
                         setacceptanceRate(student_universityOverview.acceptanceRate);
-                        let allGroups1 = [
+                        var arrayEnglish=student_universityOverview.english
+
+                        let buildEnglishArray = [
                             { "id": "IELTS", "name": "IELTS" },
                             { "id": "TOEFL", "name": "TOEFL" },
                             { "id": "Duolingo", "name": "Duolingo" },
                             { "id": "CPE", "name": "CPE" },
                             { "id": "CAE", "name": "CAE" },
                             { "id": "OET", "name": "OET" }
-
+    
                         ];
-                        let allGroupsUserSpecific1 = allGroups1.map(group => (
-                            { ...group, following: myArray.includes(group.id) })
+                        let allGroupsUserSpecific1 = buildEnglishArray.map(group => (
+                            { ...group, following: arrayEnglish.includes(group.id) })
                         );
-                        setmyallGroupsUserSpecific(allGroupsUserSpecific1)
+                        setmyallEnglish(allGroupsUserSpecific1)
+                      
                     }
                     else {
                         let allGroups1 = [
@@ -137,8 +138,8 @@ export default function Overview() {
         }
         else {
             var mycheckboxValue = e.target.value
-            var filteredArray = arrayEnglish.filter(e => e !== mycheckboxValue)
-            let allGroups1 = [
+            var filteredEnglishArray = arrayEnglish.filter(e => e !== mycheckboxValue)
+            let buildEnglishArray = [
                 { "id": "IELTS", "name": "IELTS" },
                 { "id": "TOEFL", "name": "TOEFL" },
                 { "id": "Duolingo", "name": "Duolingo" },
@@ -147,11 +148,11 @@ export default function Overview() {
                 { "id": "OET", "name": "OET" }
 
             ];
-            let allGroupsUserSpecific1 = allGroups1.map(group => (
-                { ...group, following: filteredArray.includes(group.id) })
+            let allGroupsUserSpecific1 = buildEnglishArray.map(group => (
+                { ...group, following: filteredEnglishArray.includes(group.id) })
             );
-            setmyallGroupsUserSpecific(allGroupsUserSpecific1)
-            setarrayEnglish(filteredArray)
+            setmyallEnglish(allGroupsUserSpecific1)
+            setarrayEnglish(filteredEnglishArray)
         }
     };
     function handleFormSubmit(event) {
@@ -190,9 +191,6 @@ export default function Overview() {
 
 
             setmyloader("true")
-            var enlishProficiencyArray = arrayEnglish;
-            var englishProficiencyString = enlishProficiencyArray.toString()
-
             const obj = {
                 foundedYear: foundedYear,
                 ranking: ranking,
@@ -201,7 +199,7 @@ export default function Overview() {
                 courseNo: courseNo,
                 month: month,
                 year: myyear,
-                english: englishProficiencyString,
+                english: arrayEnglish,
                 cgpa: cgpa,
                 acceptanceRate: acceptanceRate
             };
@@ -328,55 +326,33 @@ export default function Overview() {
                                     </div>
                                 </div>
                                 <div className="col-12 col-sm-6 col-md-6 col-lg-6">
-                                <div className="form-group">
-                                                < label htmlFor="State/Province">English Proficiency<span className="req-star">*</span></label>
-                                                <div className="checkgrp">
-                                                {myallGroupsUserSpecific.map((element, index) => (
-                                                    <div key={index}>
-                                                        {element.following === true ?
-                                                            <>
-                                                                <input type="checkbox" name="univeristyEnglishProficiency"
-                                                                    value={element.name} checked
-                                                                    onChange={handleuniveristyEnglishProficiencyChange} />{element.name}
-                                                            </>
-                                                            :
-                                                            <>
-                                                                <input type="checkbox" name="univeristyEnglishProficiency"
-                                                                    value={element.name}
-                                                                    onChange={handleuniveristyEnglishProficiencyChange} />{element.name}
-                                                            </>
-                                                        }
-                                                    </div>
-                                                ))}
+                                    <div className="form-group">
+                                        < label htmlFor="State/Province">English Proficiency<span className="req-star">*</span></label>
+                                        <div className="checkgrp">
+                                            {myallEnglish.map((element, index) => (
+                                                <div key={index}>
+                                                    {element.following === true ?
+                                                        <>
+                                                            <input type="checkbox" name="univeristyEnglishProficiency"
+                                                                value={element.name} checked
+                                                                onChange={handleuniveristyEnglishProficiencyChange} />{element.name}
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <input type="checkbox" name="univeristyEnglishProficiency"
+                                                                value={element.name}
+                                                                onChange={handleuniveristyEnglishProficiencyChange} />{element.name}
+                                                        </>
+                                                    }
                                                 </div>
-                                            </div> 
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
 
 
                                 <div className="col-12">
                                     <div className="row">
-                                        {/* <div className="col-md-4">
-                                            <div className="form-group">
-                                                < label htmlFor="State/Province">English Proficiency<span className="req-star">*</span></label>
-                                                {myallGroupsUserSpecific.map((element, index) => (
-                                                    <div key={index}>
-                                                        {element.following === true ?
-                                                            <>
-                                                                {element.name}<input type="checkbox" name="univeristyEnglishProficiency"
-                                                                    value={element.name} checked
-                                                                    onChange={handleuniveristyEnglishProficiencyChange} />
-                                                            </>
-                                                            :
-                                                            <>
-                                                                {element.name}<input type="checkbox" name="univeristyEnglishProficiency"
-                                                                    value={element.name}
-                                                                    onChange={handleuniveristyEnglishProficiencyChange} />
-                                                            </>
-                                                        }
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div> */}
                                         <div className="col-md-4">
                                             <div className="form-group">
                                                 <label htmlFor="State/Province">CGPA</label>

@@ -18,8 +18,10 @@ const AdminApplication = () => {
     const [successMessage, setsuccessMessage] = useState("");
     const [submitSuccess, setsubmitSuccess] = useState("0");
     useEffect(() => {
+        var adminId = localStorage.getItem('adminId');
         var mounted = localStorage.getItem("adminToken")
         setMounted(mounted)
+        if (adminId !== null) {
         const url = process.env.REACT_APP_SERVER_URL + "admin/applications/";
         fetch(url, {
             method: 'GET',
@@ -33,6 +35,7 @@ const AdminApplication = () => {
                     setFormValues(data.adminApplications)
                 }
             })
+        }
     }, [])
     let handleChange = (i, e) => {
         let newFormValues = [...formValues];

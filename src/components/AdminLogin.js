@@ -14,7 +14,6 @@ const images = importAll(require.context('../images', false, /\.(png|jpe?g|svg|w
 
 export default function AdminLogin() {
     const [email, setEmail] = useState("");
-
     const [password, setPassword] = useState("");
     const [mounted, setMounted] = useState();
     const [redirectToReferrer, setredirectToReferrer] = useState(false);
@@ -78,7 +77,6 @@ export default function AdminLogin() {
     }
     return (
         <div>
-            {/* //gf */}
             {loader === "true" ?
                 <LoaderFrontend />
                 : null}

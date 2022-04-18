@@ -15,8 +15,7 @@ export default function AddressProfile() {
     const [address, setaddress] = useState();
     const [zipcode, setzipcode] = useState()
     const [Checkmycountry, setCheckmycountry] = useState("0")
-
-    const [down, setdown] = useState("1");
+const [down, setdown] = useState("1");
     const [up, setup] = useState("0");
     const [communication_address, setcommunication_address] = useState("no");
     const [CheckState, setCheckState] = useState("0");
@@ -34,40 +33,43 @@ export default function AddressProfile() {
     }])
     const [loader, setmyloader] = useState("false");
     useEffect(() => {
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
-        axios.get(process.env.REACT_APP_SERVER_URL + 'student/address', { headers: { 'Authorization': mounted } })
-            .then(function (res) {
-                if (res.data.success === true) {
-                    var studentAddress = res.data.studentAddress;
-                    if (studentAddress.country !== "") {
-                        setCheckmycountry("1")
+        if (studentId !== null) {
+            axios.get(process.env.REACT_APP_SERVER_URL + 'student/address', { headers: { 'Authorization': mounted } })
+                .then(function (res) {
+                    if (res.data.success === true) {
+                        var studentAddress = res.data.studentAddress;
+                        if (studentAddress.country !== "") {
+                            setCheckmycountry("1")
+                        }
+                        setcountry(studentAddress.country);
+                        setstate(studentAddress.state);
+                        setcity(studentAddress.city);
+                        setaddress(studentAddress.address);
+                        setzipcode(studentAddress.zipcode);
+                        setcommunication_address(studentAddress.communication_address);
                     }
-                    setcountry(studentAddress.country);
-                    setstate(studentAddress.state);
-                    setcity(studentAddress.city);
-                    setaddress(studentAddress.address);
-                    setzipcode(studentAddress.zipcode);
-                    setcommunication_address(studentAddress.communication_address);
-                }
-            })
-            .catch(error => {
-            });
-        axios.get(process.env.REACT_APP_SERVER_URL + 'countries/')
-            .then(function (res) {
-                if (res.data.success === true) {
-                    setcountries(res.data.result);
-                }
-            })
-            .catch(error => {
-            });
-        axios.get(process.env.REACT_APP_SERVER_URL + 'states/india')
-            .then(function (res) {
-                if (res.data.success === true) {
-                }
-            })
-            .catch(error => {
-            });
+                })
+                .catch(error => {
+                });
+            axios.get(process.env.REACT_APP_SERVER_URL + 'countries/')
+                .then(function (res) {
+                    if (res.data.success === true) {
+                        setcountries(res.data.result);
+                    }
+                })
+                .catch(error => {
+                });
+            axios.get(process.env.REACT_APP_SERVER_URL + 'states/india')
+                .then(function (res) {
+                    if (res.data.success === true) {
+                    }
+                })
+                .catch(error => {
+                });
+        }
     }, [])
     function application_address(event) {
         event.preventDefault();
@@ -245,7 +247,7 @@ export default function AddressProfile() {
                                         <label htmlFor="addressLine2">Address<span className="text-danger">
                                             *</span></label>
                                         <input
-                                            value={address}
+                                            value={address || ""}
                                             onChange={(e) => setaddress(e.target.value)}
                                             type="text" className="form-control" placeholder="Address" name="address_text" required />
                                     </div>
@@ -255,7 +257,7 @@ export default function AddressProfile() {
                                         <label htmlFor="Zipcode">Zipcode<span className="text-danger">
                                             *</span></label>
                                         <input
-                                            value={zipcode}
+                                            value={zipcode || ""}
                                             onChange={(e) => setzipcode(e.target.value)}
                                             type="number" className="form-control" placeholder="Zipcode" name="zip_code" required />
                                     </div>
@@ -264,19 +266,19 @@ export default function AddressProfile() {
                                     <div className="form-group"><label htmlFor="addressLine2">Is your Home
                                         Address same as Communication Address?</label>
                                         <div className="checkgrp">
-                                        <label htmlFor="1" className="m-3">
-                                            <input
+                                            <label htmlFor="1" className="m-3">
+                                                <input
 
-                                                onChange={(e) => setcommunication_address("yes")}
-                                                checked={communication_address === "yes"}
+                                                    onChange={(e) => setcommunication_address("yes")}
+                                                    checked={communication_address === "yes"}
 
-                                                type="radio" name="address_check" /> Yes</label>
-                                        <label htmlFor="0" className="m-3"><input type="radio" name="address_check"
+                                                    type="radio" name="address_check" /> Yes</label>
+                                            <label htmlFor="0" className="m-3"><input type="radio" name="address_check"
 
-                                            onChange={(e) => setcommunication_address("no")}
-                                            checked={communication_address === "no"}
+                                                onChange={(e) => setcommunication_address("no")}
+                                                checked={communication_address === "no"}
 
-                                        /> No</label>
+                                            /> No</label>
                                         </div>
                                     </div>
                                 </div>

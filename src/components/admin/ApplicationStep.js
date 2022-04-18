@@ -14,8 +14,10 @@ export default function ApplicationStep() {
     const [mounted, setMounted] = useState();
     const [loader, setmyloader] = useState("false");
     useEffect(() => {
+        var adminId = localStorage.getItem('adminId');
         var mounted = localStorage.getItem("adminToken")
         setMounted(mounted)
+        if (adminId !== null) {
         function countries(){
             setmyloader("true")
        const url = process.env.REACT_APP_SERVER_URL + 'admin/countries';
@@ -30,6 +32,7 @@ export default function ApplicationStep() {
             })
         }
         countries()
+    }
     }, [])
     function handleCloseView() {
         setviewWidth("0px");

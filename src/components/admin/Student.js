@@ -13,7 +13,7 @@ export default function AdminUniversity() {
     const [mounted, setMounted] = useState();
     const [data, setdata] = useState([]);
     const [formValues, setFormValues] = useState([{
-        name: "", email: "", phone: "", _id: ""
+        name: "", email: "", phone: "",buildStudentID:"", _id: ""
     }])
     const [successMessage, setsuccessMessage] = useState("");
     const [submitSuccess, setsubmitSuccess] = useState("0");
@@ -22,8 +22,10 @@ export default function AdminUniversity() {
     const [deleteId, setdeleteId] = useState("");
 
     useEffect(() => {
+        var adminId = localStorage.getItem('adminId');
         var mounted = localStorage.getItem("adminToken")
         setMounted(mounted)
+        if (adminId !== null) {
         function myallStudents(){
             setmyloader("true")
         const url = process.env.REACT_APP_SERVER_URL + "admin/allStudents";
@@ -39,6 +41,7 @@ export default function AdminUniversity() {
             })
         }
         myallStudents()
+    }
     }, [])
     let handleDeleteClick = (value) => {
         setshowSweetAlert("1")
@@ -122,7 +125,7 @@ export default function AdminUniversity() {
                                             return (
                                                 <tr key={i}>
                                                     <td>{i + 1}</td>
-                                                    <td>{object._id}</td>
+                                                    <td>{object.buildStudentID}</td>
                                                     <td> {object.name}</td>
                                                     <td>{object.email}</td>
                                                     <td>{object.phone}</td>

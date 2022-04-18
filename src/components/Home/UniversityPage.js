@@ -3,7 +3,6 @@ import Footer from './Footer'
 import Header from './Header'
 import Slider from "react-slick";
 import parse from 'html-react-parser'
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,13 +13,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import LoaderFrontend from './LoaderFrontend';
 import SweetAlert from 'react-bootstrap-sweetalert';
-
-
 import { Modal, Button } from 'react-bootstrap';
-
 import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route, Link, useParams } from 'react-router-dom';
-
 import ReadMore from './ReadMore';
 function importAll(r) {
     let images = {};
@@ -40,11 +35,16 @@ export default function UniversityPage() {
     const [submitSuccess, setsubmitSuccess] = useState("0");
     const [showSweetAlert, setshowSweetAlert] = useState("0");
     const [showLoginSweetAlert, setshowLoginSweetAlert] = useState("0");
-
-
+    const [mySetting, setmySetting] = useState("0");
+    const [imageVideoShow, setimageVideoShow] = useState("1");
+    const [FAQShow, setFAQShow] = useState("1");
+    const [admissionShow, setadmissionShow] = useState("1");
+    const [documentShow, setdocumentShow] = useState("1");
     const [showErrorSweetAlert, setshowErrorSweetAlert] = useState("0");
-
     const [showModal, setshowModal] = useState(false);
+    const [universityEmail, setuniversityEmail] = useState("");
+
+
     // start for login
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -53,7 +53,7 @@ export default function UniversityPage() {
     const [wrongPassword, setwrongPassword] = useState("");
     const [wrongUsername, setwrongUsername] = useState("");
     // end for login
-
+    const [rankingShow, setrankingShow] = useState("1");
     const [coursesNoValues, setcoursesNoValues] = useState("0");
     const [formValues, setFormValues] = useState([{
         question: "", answer: ""
@@ -61,9 +61,7 @@ export default function UniversityPage() {
     const [FormAdmissionValues, setFormAdmissionValues] = useState([{
         point: ""
     }])
-    const [FormuniversitiesValues, setFormuniversitiesValues] = useState([{
-        name: "", email: ""
-    }])
+
     const [FormDocumentValues, setFormDocumentValues] = useState([{
         document: ""
     }])
@@ -84,185 +82,114 @@ export default function UniversityPage() {
     const [similarUniveristyValues, setsimilarUniveristyValues] = useState([{
         universityPrimaryInformation: "", universityOverview: "", universityImage: "", _id: "", slug: ""
     }])
-
     const [rankingValues, setrankingValues] = useState([])
     const [imageVideoValues, setimageVideoValues] = useState([])
     const [down, setdown] = useState("1");
     const [up, setup] = useState("0");
-    var settings = {
-        dots: true,
-        infinite: true,
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        autoplay: true,
-        speed: 2000,
-        autoplaySpeed: 2000,
-        cssEase: "linear",
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    arrow: true,
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
-                    infinite: true,
-                    dots: true
-                }
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                    initialSlide: 2,
-                    dots: true,
-                }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    dots: true,
-                }
-            }
-        ]
-    };
+
     useEffect(() => {
 
         window.scrollTo(0, 0)
         function completeUniveristyPage() {
             setmyloader("true")
-            const urlMain = process.env.REACT_APP_SERVER_URL + 'universitySlug/' + slug;
-            fetch(urlMain, {
+            //start for complete university detial
+            const url1 = process.env.REACT_APP_SERVER_URL + 'completeUniDetail/' + slug;
+            fetch(url1, {
                 method: 'GET',
             })
                 .then(response => response.json())
                 .then(data => {
-                    var id = data.universities[0]._id;
-                    setuniversityId(id)
-                    const url1 = process.env.REACT_APP_SERVER_URL + 'university/' + id + '/faqs';
-                    fetch(url1, {
-                        method: 'GET',
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            setFormValues(data.universityFaqs)
-                        })
+                    
+                    setmyloader("false")
+                    var finalResult = data.universities
+                    if (finalResult.email !== "undefined") {
+                        setuniversityEmail(finalResult.email)
+                    }
+                   setuniversityId(data.universities[0]._id)
 
-                    const url2 = process.env.REACT_APP_SERVER_URL + 'university/' + id + '/admissions';
-                    fetch(url2, {
-                        method: 'GET',
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            setFormAdmissionValues(data.universityAdmissions)
-                        })
-                    const url3 = process.env.REACT_APP_SERVER_URL + 'university/' + id + '/documents';
-                    fetch(url3, {
-                        method: 'GET',
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            setFormDocumentValues(data.universityDocuments)
-                        })
-                    const url4 = process.env.REACT_APP_SERVER_URL + 'university/' + id + '/overview';
-                    fetch(url4, {
-                        method: 'GET',
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            var myResult = data.universityOverview
-                            if (myResult !== undefined) {
-                                setFormOverviewValues(data.universityOverview)
-                            }
-                        })
-                    const url5 = process.env.REACT_APP_SERVER_URL + 'universities';
-                    fetch(url5, {
-                        method: 'GET',
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            var myuniversitiesResult = data.universities
-                            myuniversitiesResult.map((element) => {
-                                if (element._id === id) {
-                                    setFormuniversitiesValues(element)
-                                }
-                            })
-                        })
-                    const url6 = process.env.REACT_APP_SERVER_URL + 'university/' + id + '/primaryInformation';
-                    fetch(url6, {
-                        method: 'GET',
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            var myresults = data.universityPrimaryInformation;
-                            if (Object.keys(myresults).length !== 0) {
-                                setFormPrimaryInformationValues(data.universityPrimaryInformation)
-                            }
-                        })
-                    const url7 = process.env.REACT_APP_SERVER_URL + 'university/' + id + '/image';
-                    fetch(url7, {
-                        method: 'GET',
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            var myuniversityImage = data.universityImage
-                            if (myuniversityImage !== undefined) {
-                                setuniversityImageValues(myuniversityImage)
-                            }
-                        })
-                    const url8 = process.env.REACT_APP_SERVER_URL + 'university/' + id + '/courses';
-                    fetch(url8, {
-                        method: 'GET',
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            setcoursesValues(data.universityCourses)
-                            var myresults = data.universityCourses
-                            if (Object.keys(myresults).length > 3) {
-                                setcoursesNoValues(1);
-                            }
-                            else {
-                                setcoursesNoValues(0);
+                    if (finalResult[0].universityRankings !== undefined) {
+                        setFormValues(finalResult[0].universityRankings)
+                    }
+                    if (finalResult[0].universityAdmissions !== undefined) {
+                        setFormAdmissionValues(finalResult[0].universityAdmissions)
+                    }
 
-                            }
-                        })
-                    const url9 = process.env.REACT_APP_SERVER_URL + 'university/' + id + '/rankings';
-                    fetch(url9, {
-                        method: 'GET',
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            setrankingValues(data.universityRankings)
-                        })
-                    const url10 = process.env.REACT_APP_SERVER_URL + 'university/' + id + '/imageVideos';
-                    fetch(url10, {
-                        method: 'GET',
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            setmyloader("false")
-                            setimageVideoValues(data.universityImageVideos)
-                        })
-                    const url11 = process.env.REACT_APP_SERVER_URL + 'universitySimilar/' + slug;
-                    fetch(url11, {
-                        method: 'GET',
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-
-                            var myresultsUniversity = data.universities
-                            setsimilarUniveristyValues(data.universities)
-                            if (Object.keys(myresultsUniversity).length > 3) {
-                                var universityLength = 3
-                            }
-                            else {
-                                var universityLength = Object.keys(myresultsUniversity).length
-                            }
-
-                        })
+                    setFormDocumentValues(finalResult[0].universityDocuments)
+                   if (finalResult[0].universityOverview !== undefined) {
+                        setFormOverviewValues(finalResult[0].universityOverview)
+                    }
+                
+                    setFormPrimaryInformationValues(finalResult[0].universityPrimaryInformation)
+                    
+                    if (finalResult[0].universityImage !== undefined) {
+                    setuniversityImageValues(finalResult[0].universityImage)
+                    }
+                    setcoursesValues(finalResult[0].universityCourses)
+                    if (finalResult[0].universityRankings !== undefined) {
+                        setrankingValues(finalResult[0].universityRankings)
+                    }
+                    setimageVideoValues(finalResult[0].universityImageVideos)
                 })
+            //end for complete university detail
+            //start for similar uiversity
+
+            const url11 = process.env.REACT_APP_SERVER_URL + 'universitySimilar/' + slug;
+            fetch(url11, {
+                method: 'GET',
+            })
+                .then(response => response.json())
+                .then(data => {
+
+                    var myresultsUniversity = data.universities
+                    setsimilarUniveristyValues(data.universities)
+                    if (Object.keys(myresultsUniversity).length > 3) {
+                        var universityLength = 3
+                    }
+                    else {
+                        var universityLength = Object.keys(myresultsUniversity).length
+                    }
+                    var settings = {
+                        dots: true,
+                        infinite: true,
+                        slidesToShow: universityLength,
+                        slidesToScroll: 1,
+                        autoplay: true,
+                        speed: 2000,
+                        autoplaySpeed: 2000,
+                        cssEase: "linear",
+                        responsive: [
+                            {
+                                breakpoint: 1024,
+                                settings: {
+                                    arrow: true,
+                                    slidesToShow: 3,
+                                    slidesToScroll: 3,
+                                    infinite: true,
+                                    dots: true
+                                }
+                            },
+                            {
+                                breakpoint: 600,
+                                settings: {
+                                    slidesToShow: 2,
+                                    slidesToScroll: 2,
+                                    initialSlide: 2,
+                                    dots: true,
+                                }
+                            },
+                            {
+                                breakpoint: 480,
+                                settings: {
+                                    slidesToShow: 1,
+                                    slidesToScroll: 1,
+                                    dots: true,
+                                }
+                            }
+                        ]
+                    };
+                    setmySetting(settings)
+                })
+
 
         }
         completeUniveristyPage();
@@ -474,7 +401,7 @@ export default function UniversityPage() {
                                                         Email
                                                     </span>
                                                     <a
-                                                        href="mailto:student.helpline@sunderland.ac.uk">{FormuniversitiesValues.email}</a>
+                                                        href="mailto:student.helpline@sunderland.ac.uk">{universityEmail}</a>
                                                 </div>
                                             </div>
                                             <div className="recent-post-widget">
@@ -503,11 +430,24 @@ export default function UniversityPage() {
                                             <div className="blog-item">
                                                 <ul>
                                                     <li><a href="#overview">Overview</a></li>
-                                                    <li><a href="#ranking">Ranking</a></li>
+                                                    {rankingShow === "1" ? <li><a href="#ranking">Ranking</a></li>
+                                                        : null
+                                                    }
+
                                                     <li><a href="#courses-fees">Courses & Fees</a></li>
-                                                    <li><a href="#admission-requirements">Admissions Requirements </a></li>
-                                                    <li><a href="#images-video"> Images/Video</a></li>
+                                                    {admissionShow === "1" && documentShow === "1" ?
+
+                                                        <li><a href="#admission-requirements">Admissions Requirements </a></li>
+                                                        : null}
+                                                    {imageVideoShow === "1" ?
+                                                        <li><a href="#images-video"> Images/Video</a></li>
+                                                        : null}
                                                     <li><a href="#courses"> Browse Courses</a></li>
+
+                                                    {FAQShow === "1" ?
+                                                        <li><a href="#faq">FAQ</a></li>
+                                                        :
+                                                        null}
                                                 </ul>
                                                 <div className="overviewblock">
                                                     <div className="overview-box blue-light">
@@ -542,7 +482,7 @@ export default function UniversityPage() {
                                         <div className="col-lg-12 mb-50">
                                             <div className="blog-item" id="overview">
                                                 <div className="blog-content">
-                                                    <h3 className="blog-title"><a href="#">Overview</a></h3>
+                                                    <h3 className="blog-title"><a href="#">University Overview</a></h3>
                                                     <div className="blog-meta">
                                                         <h5>Founded year</h5>
                                                         <p>{FormOverviewValues.foundedYear}</p>
@@ -642,50 +582,54 @@ export default function UniversityPage() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-lg-12 mb-50">
-                                            <div className="blog-item" id="ranking">
-                                                <div className="blog-content">
-                                                    <h3 className="blog-title"><a >Ranking</a></h3>
-                                                    <div className="blog-meta">
-                                                        {rankingValues.map((element, index) => (
-                                                            <ul className="btm-cate" key={index}>
-                                                                <li>
-                                                                    <div className="blog-date">
-                                                                        <span>  <FontAwesomeIcon icon={faGlobe} /></span>
-                                                                        {element.agencyName}
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div className="blog-date">
-                                                                        <span><FontAwesomeIcon icon={faCalendarCheck} />  </span>
-                                                                        {element.year}
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div className="author">
-                                                                        <span><FontAwesomeIcon icon={faStar} /> </span>
-                                                                        {element.rank}
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        ))}
-                                                    </div><br />
+                                        {rankingShow === "1" ?
+                                            <div className="col-lg-12 mb-50">
+                                                <div className="blog-item" id="ranking">
+                                                    <div className="blog-content">
+                                                        <h3 className="blog-title"><a >Ranking</a></h3>
+                                                        <div className="blog-meta">
 
-                                                    <div className="raning-agency">
-                                                        <h5>Ranking Agencies</h5>
-                                                        <div className="row">
                                                             {rankingValues.map((element, index) => (
-                                                                <div className="col-md-3">
-                                                                    <div className="ranking-img">
-                                                                        <a href="#" key={index}><img src={element.certificate} alt="" /></a>
-                                                                    </div>
-                                                                </div>
+                                                                <ul className="btm-cate" key={index}>
+                                                                    <li>
+                                                                        <div className="blog-date">
+                                                                            <span>  <FontAwesomeIcon icon={faGlobe} /></span>
+                                                                            {element.agencyName}
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div className="blog-date">
+                                                                            <span><FontAwesomeIcon icon={faCalendarCheck} />  </span>
+                                                                            {element.year}
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div className="author">
+                                                                            <span><FontAwesomeIcon icon={faStar} /> </span>
+                                                                            {element.rank}
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
                                                             ))}
+                                                        </div><br />
+
+                                                        <div className="raning-agency">
+                                                            <h5>Ranking Agencies</h5>
+                                                            <div className="row">
+                                                                {rankingValues.map((element, index) => (
+                                                                    <div className="col-md-3" key={index}>
+                                                                        <div className="ranking-img">
+                                                                            <a href="#" ><img src={element.certificate} alt="" /></a>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                            : null}
+
 
                                         <div className="col-lg-12 mb50">
                                             <div className="cta_cta__3nhLf col-12">
@@ -700,83 +644,90 @@ export default function UniversityPage() {
                                             </div>
 
                                         </div>
-                                        <div className="col-lg-12 mb-50">
-                                            <div className="blog-item" id="admission-requirements">
-                                                <div className="blog-content">
-                                                    <h3 className="blog-title"><a href="#">Admissions Requirements </a></h3>
-                                                    <div className="admission-list">
-                                                        <ul className="nav nav-tabs" role="tablist">
-                                                            <li className="nav-item">
-                                                                <a className="nav-link active" data-bs-toggle="tab"
-                                                                    href="#home">Application</a>
-                                                            </li>
-                                                            <li className="nav-item">
-                                                                <a className="nav-link" data-bs-toggle="tab" href="#menu1">Documents</a>
-                                                            </li>
-                                                        </ul>
-                                                        <div className="tab-content">
-                                                            <div id="home" className="container tab-pane active"><br />
-                                                                <h5>Application</h5>
-                                                                {FormAdmissionValues.map((element, index) => (
-                                                                    <ul key={index}>
-                                                                        <li><span>
-                                                                            <FontAwesomeIcon icon={faCheckCircle} />
-                                                                        </span>{parse(element.point)}
+                                        {admissionShow === "1" && documentShow === "1" ?
+                                            <div className="col-lg-12 mb-50">
+                                                <div className="blog-item" id="admission-requirements">
+                                                    <div className="blog-content">
+                                                        <h3 className="blog-title"><a href="#">Admissions Requirements </a></h3>
+                                                        <div className="admission-list">
+                                                            <ul className="nav nav-tabs" role="tablist">
+                                                                <li className="nav-item">
+                                                                    <a className="nav-link active" data-bs-toggle="tab"
+                                                                        href="#home">Application</a>
+                                                                </li>
+                                                                <li className="nav-item">
+                                                                    <a className="nav-link" data-bs-toggle="tab" href="#menu1">Documents</a>
+                                                                </li>
+                                                            </ul>
+                                                            <div className="tab-content">
+                                                                <div id="home" className="container tab-pane active"><br />
+                                                                    <h5>Application</h5>
+                                                                    {FormAdmissionValues.map((element, index) => (
+                                                                        <div key={index}>
+                                                                            <span>
 
-                                                                        </li>
 
-                                                                    </ul>
-                                                                ))}
-                                                            </div>
-                                                            <div id="menu1" className="container tab-pane fade"><br />
-                                                                <h5>Documents</h5>
-                                                                {FormDocumentValues.map((element, index) => (
-                                                                    <ul key={index}>
-                                                                        <li><span>
-                                                                            <FontAwesomeIcon icon={faCheckCircle} />
-                                                                        </span>{parse(element.document)}</li>
+                                                                            </span>{parse(element.point)}
 
-                                                                    </ul>
-                                                                ))}
+
+
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                                <div id="menu1" className="container tab-pane fade"><br />
+                                                                    <h5>Documents</h5>
+                                                                    {FormDocumentValues.map((element, index) => (
+                                                                        <div key={index}>
+                                                                            <span>
+
+                                                                            </span>{parse(element.document)}
+
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="col-lg-12 mb-50">
-                                            <div className="blog-item" id="images-video">
-                                                <div className="blog-content">
-                                                    <h3 className="blog-title"><a href="#">Images/Video </a></h3>
-                                                    <div className="row" >
-                                                        {imageVideoValues.map((element, index) => {
-                                                            var mylink = element.link
-                                                            const myArray = mylink.split("=");
-                                                            return (
+                                            : null}
+                                        {imageVideoShow === "1" ?
+                                            <div className="col-lg-12 mb-50">
+                                                <div className="blog-item" id="images-video">
+                                                    <div className="blog-content">
+                                                        <h3 className="blog-title"><a href="#">Images/Video </a></h3>
+                                                        <div className="row" >
+                                                            {imageVideoValues.map((element, index) => {
+                                                                var mylink = element.link
+                                                                const myArray = mylink.split("=");
+                                                                return (
 
-                                                                <div className="col-md-4" key={index}>
-                                                                    <div className="blog-img mb-3">
-                                                                        {element.type === "image" ?
-                                                                            <a >
-                                                                                <img src={element.link} alt="image" />
-                                                                            </a>
-                                                                            :
-                                                                            <a >
-                                                                                <iframe className='video'
-                                                                                    title='Youtube player'
-                                                                                    sandbox='allow-same-origin allow-forms allow-popups allow-scripts allow-presentation'
-                                                                                    src={'https://youtube.com/embed/' + myArray[1] + '?autoplay=0'}>
-                                                                                </iframe>
-                                                                            </a>
-                                                                        }
+                                                                    <div className="col-md-4" key={index}>
+                                                                        <div className="blog-img mb-3">
+                                                                            {element.type === "image" ?
+                                                                                <a >
+                                                                                    <img src={element.link} alt="image" />
+                                                                                </a>
+                                                                                :
+                                                                                <a >
+                                                                                    <iframe className='video'
+                                                                                        title='Youtube player'
+                                                                                        sandbox='allow-same-origin allow-forms allow-popups allow-scripts allow-presentation'
+                                                                                        src={'https://youtube.com/embed/' + myArray[1] + '?autoplay=0'}>
+                                                                                    </iframe>
+                                                                                </a>
+                                                                            }
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            )
-                                                        })}
+                                                                )
+                                                            })}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                            : null
+                                        }
+
 
                                         <div className="col-lg-12">
                                             <div className="blog-item" id="courses">
@@ -786,7 +737,7 @@ export default function UniversityPage() {
                                                         {coursesValues.map((element, index) => (
                                                             <>
                                                                 {index < 4 ?
-                                                                    <div className="col-sm-6 mb-4" >
+                                                                    <div className="col-sm-6 mb-4" key={index}>
 
                                                                         <div>
                                                                             <div className="subcourses_courseBox__3deGG">
@@ -802,6 +753,15 @@ export default function UniversityPage() {
                                                                                     <div className="col-6 col-sm-4 clearfix">
                                                                                         <div className="subcourses_details__3g8AB">
                                                                                             <h3 className="subcourses_c-desc__Dzhnk">
+                                                                                                {element.currency === "GBP" ?
+                                                                                                    <>£</>
+                                                                                                    :
+                                                                                                    element.currency === "EUR" ?
+                                                                                                        <>€</>
+                                                                                                        :
+                                                                                                        <>$</>
+
+                                                                                                }
                                                                                                 {element.tuitionFee}{" "}  {element.currency}
                                                                                             </h3>
                                                                                             <p className="subcourses_c-title__2MKAy">Fee</p>
@@ -809,15 +769,15 @@ export default function UniversityPage() {
                                                                                     </div>
                                                                                     <div className="col-6 col-sm-4">
                                                                                         <div className="subcourses_details__3g8AB">
-                                                                                            <h3 className="subcourses_c-desc__Dzhnk">{element.duration}
+                                                                                            <h3 className="subcourses_c-desc__Dzhnk">{element.duration} Month
                                                                                             </h3>
                                                                                             <p className="subcourses_c-title__2MKAy">Duration</p>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div className="col-6 col-sm-4">
                                                                                         <div className="subcourses_details__3g8AB">
-                                                                                            <h3 className="subcourses_c-desc__Dzhnk">{element.exam}</h3>
-                                                                                            <p className="subcourses_c-title__2MKAy">Qualification</p>
+                                                                                            <h3 className="subcourses_c-desc__Dzhnk">{element.english}</h3>
+                                                                                            <p className="subcourses_c-title__2MKAy">Education</p>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div className="col-6 col-sm-4 mt-2">
@@ -836,7 +796,7 @@ export default function UniversityPage() {
                                                                                         <div className="subcourses_details__3g8AB">
                                                                                             <h3 className="subcourses_c-desc__Dzhnk">{element.year}{' '}{element.month}</h3>
                                                                                             <p className="subcourses_c-title__2MKAy">Intakes</p>
-                                                                                        </div>
+                                                                                       </div>
                                                                                     </div>
                                                                                     <div className="col-sm-12">
                                                                                         <div className="subcourses_line__T3g-V">
@@ -846,6 +806,7 @@ export default function UniversityPage() {
                                                                                 </div>
                                                                             </div>
                                                                             <div className="text-right w-100">
+
                                                                                 <button className="btn btn-primary  w-100" onClick={() => handleApplyNow(universityId, element._id, element.year + element.month, "first", FormPrimaryInformationValues.country, FormPrimaryInformationValues.name)}>Apply Now
                                                                                     <img
                                                                                         src="https://images.leverageedu.com/university/whitearrow.svg" />
@@ -870,59 +831,61 @@ export default function UniversityPage() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-lg-12 mb-3 mt-5">
-                                            <div id="accordion" className="blog-item">
-                                                <div className=" blog-content">
-                                                    <h3 className="blog-title">FAQ</h3>
-                                                    {formValues.map((element, index) => (
-                                                        <div key={index}>
-                                                            <div className="card">
-                                                                <a className="card-header  card-link" onClick={() => handleClick()}
-                                                                    data-bs-toggle="collapse" href={"#collapsefaq" + index}>
-                                                                    {down === "0" ?
-                                                                        null
-                                                                        :
-                                                                        <FontAwesomeIcon icon={faAngleDown} style={{
+                                        {FAQShow === "1" ?
+                                            <div className="col-lg-12 mb-3 mt-5">
+                                                <div id="faq" className="blog-item">
+                                                    <div className=" blog-content">
+                                                        <h3 className="blog-title">FAQ</h3>
+                                                        {formValues.map((element, index) => (
+                                                            <div key={index}>
+                                                                <div className="card">
+                                                                    <a className="card-header  card-link" onClick={() => handleClick()}
+                                                                        data-bs-toggle="collapse" href={"#collapsefaq" + index}>
+                                                                        {down === "0" ?
+                                                                            null
+                                                                            :
+                                                                            <FontAwesomeIcon icon={faAngleDown} style={{
 
-                                                                            color: "#000",
-                                                                            position: "absolute",
-                                                                            display: "inline-block",
+                                                                                color: "#000",
+                                                                                position: "absolute",
+                                                                                display: "inline-block",
 
-                                                                            fontSize: "inherit",
-                                                                            textRendering: "auto",
-                                                                            right: "20px"
-                                                                        }} />
-                                                                    }
-                                                                    {up === "0" ?
-                                                                        null
-                                                                        :
-                                                                        <FontAwesomeIcon icon={faAngleUp} style={{
-                                                                            position: "absolute",
-                                                                            fontWeight: 900,
-                                                                            fontFamily: 'Font Awesome 5 Free',
-                                                                            marginRight: "0.1rem",
-                                                                            right: "16px",
-                                                                        }} />
-                                                                    }
-                                                                    {element.question || ""}
-                                                                </a>
-                                                                <div id={"collapsefaq" + index} className="collapse" data-bs-parent="#accordion">
-                                                                    <div className="card-body">
-                                                                        {element.answer || ""}
+                                                                                fontSize: "inherit",
+                                                                                textRendering: "auto",
+                                                                                right: "20px"
+                                                                            }} />
+                                                                        }
+                                                                        {up === "0" ?
+                                                                            null
+                                                                            :
+                                                                            <FontAwesomeIcon icon={faAngleUp} style={{
+                                                                                position: "absolute",
+                                                                                fontWeight: 900,
+                                                                                fontFamily: 'Font Awesome 5 Free',
+                                                                                marginRight: "0.1rem",
+                                                                                right: "16px",
+                                                                            }} />
+                                                                        }
+                                                                        {element.question || ""}
+                                                                    </a>
+                                                                    <div id={"collapsefaq" + index} className="collapse" data-bs-parent="#accordion">
+                                                                        <div className="card-body">
+                                                                            {element.answer || ""}
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    ))}
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-
+                                            : null
+                                        }
                                         <div className="col-lg-12 mb-5">
                                             <div id="Similar" className="blog-item">
                                                 <div className="similar_fullbox__1qBJc  blog-content">
                                                     <h3 className="blog-title"><a href="#">Similar Universities</a></h3>
-                                                    <Slider {...settings}>
+                                                    <Slider {...mySetting}>
                                                         {similarUniveristyValues.map((element, index) =>
                                                         (
                                                             <>
@@ -970,9 +933,7 @@ export default function UniversityPage() {
                     </div>
                 </div>
                 <Footer />
-                <div id="scrollUp" className="orange-color">
-                    <i className="fa fa-angle-up"></i>
-                </div>
+
             </div >
             <Modal className="modal-container"
                 show={showModal}

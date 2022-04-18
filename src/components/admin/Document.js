@@ -18,8 +18,10 @@ const Admindocument = () => {
     const [successMessage, setsuccessMessage] = useState("");
     const [submitSuccess, setsubmitSuccess] = useState("0");
     useEffect(() => {
+        var adminId = localStorage.getItem('adminId');
         var mounted = localStorage.getItem("adminToken")
         setMounted(mounted)
+        if (adminId !== null) {
         const url = process.env.REACT_APP_SERVER_URL + "admin/documents/";
         fetch(url, {
             method: 'GET',
@@ -33,6 +35,7 @@ const Admindocument = () => {
                     setFormValues(data.adminDocuments)
                 }
             })
+        }
     }, [])
     let handleChange = (i, e) => {
         let newFormValues = [...formValues];

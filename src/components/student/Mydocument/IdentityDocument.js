@@ -34,8 +34,10 @@ export default function IdentityDocument() {
     useEffect(() => {
         setmyPassportDocx("0")
         setmycvDocx("0")
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
+        if (studentId !== null) {
         function identityDocumentAllDetails() {
             fetch(process.env.REACT_APP_SERVER_URL + 'student/identityDocument', {
                 method: 'get',
@@ -73,6 +75,7 @@ export default function IdentityDocument() {
                 })
         }
         identityDocumentAllDetails()
+    }
     }, [])
     function handleClick() {
         if (down === "1") {

@@ -371,7 +371,7 @@ export default function Application() {
                                                                     <input id="addApplicationx" type="hidden" />
                                                                     <trix-editor
                                                                         name="universityApplication"
-                                                                        onChange={event => this.changeHandler(event)} class="applicationTrixAdd form-control editarea help "
+                                                                        onChange={event => this.changeHandler(event)} className="applicationTrixAdd form-control editarea help "
                                                                         input="addApplicationx"
                                                                     >
                                                                     </trix-editor>
@@ -456,7 +456,7 @@ export default function Application() {
                                                                     <input id="editApplicationx" type="hidden" />
                                                                     <trix-editor
                                                                         name="universityApplication"
-                                                                        onChange={event => this.changeHandler(event)} class="applicationTrixEdit form-control editarea "
+                                                                        onChange={event => this.changeHandler(event)} className="applicationTrixEdit form-control editarea "
                                                                         input="editApplicationx"
                                                                     >
                                                                     

@@ -374,7 +374,7 @@ export default function Document() {
                                                                     <input id="x" type="hidden" />
                                                                     <trix-editor
                                                                         name="universityApplication"
-                                                                        onChange={event => this.changeHandler(event)} class="form-control editarea helpadd"
+                                                                        onChange={event => this.changeHandler(event)} className="form-control editarea helpadd"
                                                                         input="x"
                                                                     >
                                                                     </trix-editor>
@@ -454,7 +454,7 @@ export default function Document() {
                                                                     <input id="editx" type="hidden" />
                                                                     <trix-editor
                                                                         name="universityApplication"
-                                                                        onChange={event => this.changeHandler(event)} class="form-control editarea helpedit"
+                                                                        onChange={event => this.changeHandler(event)} className="form-control editarea helpedit"
                                                                         input="editx"
                                                                     >
                                                                           {parse(MYpoint)}

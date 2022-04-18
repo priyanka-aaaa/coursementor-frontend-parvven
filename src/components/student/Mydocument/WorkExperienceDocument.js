@@ -34,9 +34,12 @@ export default function WorkExperienceDocument() {
     const [down, setdown] = useState("1");
     const [up, setup] = useState("0");
     useEffect(() => {
+       
         setmyPassportDocx("0")
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
+        if (studentId !== null) {
         var myurl = process.env.REACT_APP_SERVER_URL;
         function workRexperienceAllDetails() {
             fetch(process.env.REACT_APP_SERVER_URL + 'student/experienceDocument', {
@@ -59,6 +62,7 @@ export default function WorkExperienceDocument() {
                 })
         }
         workRexperienceAllDetails();
+    }
     }, [])
     function handleClick() {
         if (down === "1") {

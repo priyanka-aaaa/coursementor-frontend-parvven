@@ -1,19 +1,24 @@
-
 trix-editor:empty:not(:focus)::before {
   content: "•" !important;
   /* color: graytext;
   cursor: text; */
 }
+
 ul {
   list-style: initial !important;
   margin: 0;
   padding: 0;
 }
 
-
-
- nav.right_menu_togle {
-  background: rgba(0,0,0,0.9);
+.tab-pane li::before {
+  content: " a";
+  padding-left: 12px;
+  background-image: url(assets/images/circle-check-solid.svg) !important;
+  margin-right: 7px;
+  color: #067392;
+}
+nav.right_menu_togle {
+  background: rgba(0, 0, 0, 0.9);
   display: block;
   height: 100%;
   overflow: auto;
@@ -29,40 +34,86 @@ ul {
 
 
 }
+
 button.slick-arrow.slick-prev {
 
   background-color: #077493;
-  
-      height: 35px;
-  
-      width: 35px;
-  
-      border-radius: 100px;
-  
-    }
-  
-  button.slick-arrow.slick-next {
-  
-    background-color: #077493;
-  
-    height: 35px;
-  
-    width: 35px;
-  
-    border-radius: 100px;
-  
-  }
-  .Show_success_bookmark {
-    color: #fff;
-    background-color: #1abc9c !important;
-    border-color: #e64844 !important;
-    width: 23%;
-    position: fixed;
-    top: 7%;
-    right: 3%;
-    border-radius: 4px;
-    z-index: 1;
-    font-weight: 700;
-    padding: 14px 0px;
-    text-align: center;
+
+  height: 35px;
+
+  width: 35px;
+
+  border-radius: 100px;
+
+}
+
+button.slick-arrow.slick-next {
+
+  background-color: #077493;
+
+  height: 35px;
+
+  width: 35px;
+
+  border-radius: 100px;
+
+}
+
+.Show_success_bookmark {
+  color: #fff;
+  background-color: #1abc9c !important;
+  border-color: #e64844 !important;
+  width: 23%;
+  position: fixed;
+  top: 7%;
+  right: 3%;
+  border-radius: 4px;
+  z-index: 1;
+  font-weight: 700;
+  padding: 14px 0px;
+  text-align: center;
+}
+/* start priyanka 12-04-2022 */
+section#filterSection a.card-header.card-link.collapsed:after {
+  content: url(assets/images/chevron-down-solid.svg) !important;
+  color: #000;
+  position: absolute;
+  font-family: font awesome;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  right: 20px;
+  font-size: 10px;
+  top: 14px;
+  width: 13px;
+}
+section#filterSection a.card-header.card-link.collapsed:before {
+  content: none;
+
+}
+a.card-header.card-link:before {
+  content: url(assets/images/chevron-up-solid.svg);
+  color: #000;
+  position: absolute;
+  font-family: font awesome;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  right: 20px;
+  width: 13px;
+}
+span.suggession-type {
+  float: right !important;
+  color: #000;
+}
+.search-suggestion{
+  display: block;
+}
+/* end priyana 12-04-2022 */
+input[type="range"] {
+  width: 100%;
 }

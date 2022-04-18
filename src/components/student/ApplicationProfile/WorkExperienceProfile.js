@@ -40,8 +40,10 @@ export default function WorkExperienceProfile() {
         city_name: ""
     }])
     useEffect(() => {
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
+        if (studentId !== null) {
         const url = process.env.REACT_APP_SERVER_URL + 'student/experiences';
         fetch(url, {
             method: 'GET',
@@ -66,6 +68,7 @@ export default function WorkExperienceProfile() {
             })
             .catch(error => {
             });
+        }
     }, [])
     function handleClick() {
         if (down === "1") {

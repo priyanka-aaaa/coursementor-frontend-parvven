@@ -1,155 +1,356 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
+import Footer from './Footer'
+import Header from './Header'
 import {
-
   faStar, faAngleUp, faHistory,
-  faBars,faSearch,faBullseye,faShield,faUniversity,faCheckSquare,faCreditCard,faLaptop
+  faBars, faSearch, faBullseye, faShield, faUniversity, faCheckSquare, faCreditCard, faLaptop
 
 } from '@fortawesome/free-solid-svg-icons';
 
-import {
-  faFacebookF, faGoogle, faTwitter, faFacebook,
-  faPinterest, faInstagram
-} from "@fortawesome/free-brands-svg-icons";
-function FinalFilter(props) {
+function FinalFilter() {
+  const [courseDurationRange, setcourseDurationRange] = useState("");
+  const [tuitionFeeRange, settuitionFeeRange] = useState(1);
+  const [universityType, setuniversityType] = useState("");
 
+
+  const [universityNumber, setuniversityNumber] = useState("");
+  const [arrayCountry, setarrayCountry] = useState([]);
+  const [allUniversityValues, setallUniversityValues] = useState([{
+    myinformation: [{ name: "", slug: "", country: "", state: "", type: "" }], myoverview: [{ ranking: "", foundedYear: "" }],
+    myimage: [{ logo: "" }], _id: ""
+  }])
+  const [allCourseValues, setallCourseValues] = useState([{
+    universities: [{ information: [{ name: "", state: "", country: "" }] }], _id: ""
+  }])
+  const [courseNumber, setcourseNumber] = useState("");
+  const [completeCountry, setcompleteCountry] = useState([]);
+  //start for areaOfInterest
+  const [arrayAreaOfInterest, setarrayAreaOfInterest] = useState([]);
+  const [completeAreaOfInterest, setcompleteAreaOfInterest] = useState([]);
+
+  //end for areaOfInterest
+  useEffect(() => {
+    // start for country checkbox
+    let buildfilterCountryArray = [
+      { "id": "United States", "name": "United States" },
+      { "id": "United Kingdom", "name": "United Kingdom" },
+      { "id": "Australia", "name": "Australia" },
+      { "id": "Canada", "name": "Canada" }
+    ];
+    let filterCountryFollowing = buildfilterCountryArray.map(group => (
+      { ...group, following: arrayCountry.includes(group.id) })
+    );
+    setcompleteCountry(filterCountryFollowing)
+    //end for country checkbox
+    // start for areaOfInterest checkbox
+    let buildfilterAreaOfInterestArray = [
+      { "id": "Management", "name": "Management" },
+      { "id": "Master", "name": "Master" },
+      { "id": "Engineering", "name": "Engineering" },
+      { "id": "Computers and Data Science", "name": "Computers and Data Science" },
+      { "id": "Design", "name": "Design" }
+    ];
+    let filterAreaOfInterestFollowing = buildfilterAreaOfInterestArray.map(group => (
+      { ...group, following: arrayAreaOfInterest.includes(group.id) })
+    );
+
+    setcompleteAreaOfInterest(filterAreaOfInterestFollowing)
+    //end for areaOfInterest checkbox
+    // start for intake checkbox
+    // let buildfilterIntakeArray = [
+    //   { "id": "Management", "name": "Management" },
+    //   { "id": "Master", "name": "Master" },
+    //   { "id": "Engineering", "name": "Engineering" },
+    //   { "id": "Computers and Data Science", "name": "Computers and Data Science" },
+    //   { "id": "Design", "name": "Design" }
+    // ];
+    // let filterIntakeFollowing = buildfilterIntakeArray.map(group => (
+    //   { ...group, following: arrayAreaOfInterest.includes(group.id) })
+    // );
+
+    // setcompleteIntake(filterIntakeFollowing)
+    //end for intake checkbox
+    const url = process.env.REACT_APP_SERVER_URL + 'filter/allUniversity';
+    fetch(url, {
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(data => {
+        setallUniversityValues(data.applications)
+        var myresultsUniversity = data.applications
+        var universityNumber = Object.keys(myresultsUniversity).length;
+        setuniversityNumber(universityNumber)
+      })
+    const url2 = process.env.REACT_APP_SERVER_URL + 'filtercourse';
+    fetch(url2, {
+      method: 'GET'
+    })
+      .then(response => response.json())
+      .then(data => {
+        setallCourseValues(data.applications)
+        var myresultsCourse = data.applications
+        var courseNumber = Object.keys(myresultsCourse).length;
+        setcourseNumber(courseNumber)
+      })
+  }, [])
+  const handleuniveristyExamChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      var mycheckboxValue = e.target.value
+      setarrayCountry((prevVals) =>
+        [...prevVals, mycheckboxValue])
+      var checkCountry = arrayCountry.concat(mycheckboxValue);
+      let buildfilterCountryArray = [
+        { "id": "United States", "name": "United States" },
+        { "id": "United Kingdom", "name": "United Kingdom" },
+        { "id": "Australia", "name": "Australia" },
+        { "id": "Canada", "name": "Canada" }
+      ];
+      let filterCountryFollowing = buildfilterCountryArray.map(group => (
+        { ...group, following: checkCountry.includes(group.id) })
+      );
+      setcompleteCountry(filterCountryFollowing)
+    }
+    else {
+      var mycheckboxValue = e.target.value
+      var filteredExamArray = arrayCountry.filter(e => e !== mycheckboxValue)
+      setarrayCountry(filteredExamArray)
+
+      // start for unchecked
+      let buildfilterCountryArray = [
+        { "id": "United States", "name": "United States" },
+        { "id": "United Kingdom", "name": "United Kingdom" },
+        { "id": "Australia", "name": "Australia" },
+        { "id": "Canada", "name": "Canada" }
+      ];
+      let filterCountryFollowing = buildfilterCountryArray.map(group => (
+        { ...group, following: filteredExamArray.includes(group.id) })
+      );
+      setcompleteCountry(filterCountryFollowing)
+      // end for unchecked
+    }
+
+  };
+  const handleAreaOfInterestChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      var mycheckboxValue = e.target.value
+      setarrayAreaOfInterest((prevVals) =>
+        [...prevVals, mycheckboxValue])
+      var checkAreaOfInterest = arrayAreaOfInterest.concat(mycheckboxValue);
+      let buildfilterAreaOfInterestArray = [
+        { "id": "Management", "name": "Management" },
+        { "id": "Master", "name": "Master" },
+        { "id": "Engineering", "name": "Engineering" },
+        { "id": "Computers and Data Science", "name": "Computers and Data Science" },
+        { "id": "Design", "name": "Design" }
+      ];
+      let filterAreaOfInterestFollowing = buildfilterAreaOfInterestArray.map(group => (
+        { ...group, following: checkAreaOfInterest.includes(group.id) })
+      );
+
+      setcompleteAreaOfInterest(filterAreaOfInterestFollowing)
+    }
+    else {
+      var mycheckboxValue = e.target.value
+      var filteredAreaOfInterestArray = arrayAreaOfInterest.filter(e => e !== mycheckboxValue)
+      setarrayAreaOfInterest(filteredAreaOfInterestArray)
+
+      // start for unchecked
+      let buildfilterAreaOfInterestArray = [
+        { "id": "Management", "name": "Management" },
+        { "id": "Master", "name": "Master" },
+        { "id": "Engineering", "name": "Engineering" },
+        { "id": "Computers and Data Science", "name": "Computers and Data Science" },
+        { "id": "Design", "name": "Design" }
+      ];
+      let filterAreaOfInterestFollowing = buildfilterAreaOfInterestArray.map(group => (
+        { ...group, following: filteredAreaOfInterestArray.includes(group.id) })
+      );
+      setcompleteAreaOfInterest(filterAreaOfInterestFollowing)
+      // end for unchecked
+    }
+
+  };
+  function deleteCountryClick(value) {
+    var filteredExamArray = arrayCountry.filter(e => e !== value)
+    setarrayCountry(filteredExamArray)
+    let buildfilterCountryArray = [
+      { "id": "United States", "name": "United States" },
+      { "id": "United Kingdom", "name": "United Kingdom" },
+      { "id": "Australia", "name": "Australia" },
+      { "id": "Canada", "name": "Canada" }
+    ];
+    let filterCountryFollowing = buildfilterCountryArray.map(group => (
+      { ...group, following: filteredExamArray.includes(group.id) })
+    );
+    setcompleteCountry(filterCountryFollowing)
+  }
+  function deleteAreaOfInterestClick(value) {
+    var filteredAreaOfInterestArray = arrayAreaOfInterest.filter(e => e !== value)
+    setarrayAreaOfInterest(filteredAreaOfInterestArray)
+    let buildfilterAreaOfInterestArray = [
+      { "id": "Management", "name": "Management" },
+      { "id": "Master", "name": "Master" },
+      { "id": "Engineering", "name": "Engineering" },
+      { "id": "Computers and Data Science", "name": "Computers and Data Science" },
+      { "id": "Design", "name": "Design" }
+    ];
+    let filterAreaOfInterestFollowing = buildfilterAreaOfInterestArray.map(group => (
+      { ...group, following: filteredAreaOfInterestArray.includes(group.id) })
+    );
+    setcompleteAreaOfInterest(filterAreaOfInterestFollowing)
+  }
+  function handleApplyFilter() {
+    //start for country 
+    localStorage.setItem("countryFilter", arrayCountry);
+    var arrayCountryCount = arrayCountry.length;
+    if (arrayCountryCount !== 0) {
+      const url1 = process.env.REACT_APP_SERVER_URL + 'filter/country'
+      fetch(url1, {
+        method: 'put',
+        body: JSON.stringify({ country: arrayCountry }),
+        headers: { "Content-Type": "application/json" }
+      })
+        .then(response => response.json())
+        .then(data => {
+          setallUniversityValues(data.applications)
+          var myresultsUniversity = data.applications
+          var universityNumber = Object.keys(myresultsUniversity).length;
+          setuniversityNumber(universityNumber)
+        })
+      const url2 = process.env.REACT_APP_SERVER_URL + 'filtercourseCountry';
+      fetch(url2, {
+        method: 'put',
+        body: JSON.stringify({ country: arrayCountry }),
+        headers: { "Content-Type": "application/json" }
+      })
+        .then(response => response.json())
+        .then(data => {
+          setallCourseValues(data.applications)
+          var myresultsCourse = data.applications
+          var courseNumber = Object.keys(myresultsCourse).length;
+          setcourseNumber(courseNumber)
+        })
+
+    }
+    // end for country
+    // start for areaOfInterest
+    var arrayAreaOfInterestCount = arrayAreaOfInterest.length;
+    if (arrayAreaOfInterestCount !== 0) {
+      const url1 = process.env.REACT_APP_SERVER_URL + 'filterAreaOfInterest'
+      fetch(url1, {
+        method: 'put',
+        body: JSON.stringify({ areaOfInterest: arrayAreaOfInterest }),
+        headers: { "Content-Type": "application/json" }
+      })
+        .then(response => response.json())
+        .then(data => {
+          setallUniversityValues(data.applications)
+          var myresultsUniversity = data.applications
+          var universityNumber = Object.keys(myresultsUniversity).length;
+          setuniversityNumber(universityNumber)
+        })
+      const url2 = process.env.REACT_APP_SERVER_URL + 'filtercourseAreaOfInterest';
+      fetch(url2, {
+        method: 'put',
+        body: JSON.stringify({ areaOfInterest: arrayAreaOfInterest }),
+        headers: { "Content-Type": "application/json" }
+      })
+        .then(response => response.json())
+        .then(data => {
+          setallCourseValues(data.applications)
+          var myresultsCourse = data.applications
+          var courseNumber = Object.keys(myresultsCourse).length;
+          setcourseNumber(courseNumber)
+        })
+
+    }
+    //end for areaOfInterest
+    //start for university type
+    if (universityType !== "") {
+      const url1 = process.env.REACT_APP_SERVER_URL + 'filterUniversityType'
+      fetch(url1, {
+        method: 'put',
+        body: JSON.stringify({ type: universityType }),
+        headers: { "Content-Type": "application/json" }
+
+      })
+        .then(response => response.json())
+        .then(data => {
+          setallUniversityValues(data.applications)
+          var myresultsUniversity = data.applications
+          var universityNumber = Object.keys(myresultsUniversity).length;
+          setuniversityNumber(universityNumber)
+        })
+      const url2 = process.env.REACT_APP_SERVER_URL + 'filtercourseUniversityType';
+      fetch(url2, {
+        method: 'put',
+        body: JSON.stringify({ type: universityType }),
+        headers: { "Content-Type": "application/json" }
+      })
+        .then(response => response.json())
+        .then(data => {
+          setallCourseValues(data.applications)
+          var myresultsCourse = data.applications
+          var courseNumber = Object.keys(myresultsCourse).length;
+          setcourseNumber(courseNumber)
+        })
+
+    }
+    //end for university type
+    //start for course duration
+    if (courseDurationRange !== "") {
+      const url1 = process.env.REACT_APP_SERVER_URL + 'filtercourseDuration'
+      fetch(url1, {
+        method: 'put',
+        body: JSON.stringify({ duration: courseDurationRange }),
+        headers: { "Content-Type": "application/json" }
+
+      })
+        .then(response => response.json())
+        .then(data => {
+          setallUniversityValues(data.applications)
+          var myresultsUniversity = data.applications
+          var universityNumber = Object.keys(myresultsUniversity).length;
+          setuniversityNumber(universityNumber)
+        })
+      const url2 = process.env.REACT_APP_SERVER_URL + 'filtercoursecourseDuration';
+      fetch(url2, {
+        method: 'put',
+        body: JSON.stringify({ duration: courseDurationRange }),
+        headers: { "Content-Type": "application/json" }
+      })
+        .then(response => response.json())
+        .then(data => {
+          setallCourseValues(data.applications)
+          var myresultsCourse = data.applications
+          var courseNumber = Object.keys(myresultsCourse).length;
+          setcourseNumber(courseNumber)
+        })
+
+    }
+    //end for course duration
+  }
+  function handleuniversityTypeChange(value) {
+    setuniversityType(value)
+
+  }
+  function deleteuniversityTypeClick() {
+    setuniversityType("")
+
+  }
+  function deletecourseDurationRangeClick() {
+    setcourseDurationRange("")
+  }
   return (
     <div className="main-content">
       {/*Full width header Start*/}
       <div className="full-width-header">
-        {/*Header Start*/}
-        <header id="rs-header" className="rs-header style3 modify1">
-          {/* Menu Start */}
-          <div className="menu-area menu-sticky">
-            <div className="container-fluid">
-              <div className="row align-items-center">
-                <div className="col-lg-2">
-                  <div className="logo-part">
-                    <a href="index.html"><img src="assets/images/logo.png" alt="" /></a>
-                  </div>
-                  <div className="mobile-menu">
-                    <a href="#" className="rs-menu-toggle rs-menu-toggle-close secondary">
-
-                      <FontAwesomeIcon icon={faBars} />
-
-                    </a>
-                  </div>
-                </div>
-                <div className="col-lg-10 text-right">
-                  <div className="rs-menu-area">
-                    <div className="main-menu">
-                      <nav className="rs-menu pr-86 lg-pr-50 md-pr-0">
-                        <ul className="nav-menu">
-                          <li className="menu-item-has-children current-menu-item"> <a href="#">Home</a>
-                          </li>
-                          <li>
-                            <a href="about.html">About</a>
-                          </li>
-                          <li>
-                            <a href="contact.html">Contact</a>
-                          </li>
-                        </ul>
-                      </nav>
-                    </div>
-                    <div className="expand-btn-inner search-icon hidden-md">
-                      <ul>
-                        <li className="sidebarmenu-search">
-                          <a className="hidden-xs rs-search" data-target=".search-modal" data-toggle="modal" href="#">
-                            <i className="flaticon-search" />
-                          </a>
-                        </li>
-                        <li>
-                          <a id="nav-expander" className="humburger nav-expander" href="#">
-                            <span className="dot1" />
-                            <span className="dot2" />
-                            <span className="dot3" />
-                            <span className="dot4" />
-                            <span className="dot5" />
-                            <span className="dot6" />
-                            <span className="dot7" />
-                            <span className="dot8" />
-                            <span className="dot9" />
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* Menu End */}
-        </header>
-        {/*Header End*/}
-        {/* Canvas Menu start */}
-        <nav className="right_menu_togle hidden-md">
-          <div className="close-btn">
-            <div className="nav-link">
-              <a id="nav-close" className="humburger nav-expander" href="#">
-                <span className="dot1" />
-                <span className="dot2" />
-                <span className="dot3" />
-                <span className="dot4" />
-                <span className="dot5" />
-                <span className="dot6" />
-                <span className="dot7" />
-                <span className="dot8" />
-                <span className="dot9" />
-              </a>
-            </div>
-          </div>
-          <div className="canvas-logo">
-            <a href="index.html"><img src="assets/images/logo.png" alt="logo" /></a>
-          </div>
-          <div className="offcanvas-text">
-            <p> Coursementor.com is a 24*7 Online Tutoring Platform. Get online tutoring on-demand on hundreds of subjects
-              or topics, whenever you need it.
-            </p>
-          </div>
-          <div className="canvas-contact">
-            <div className="address-area">
-              <div className="address-list">
-                <div className="info-icon">
-                  <i className="flaticon-location" />
-                </div>
-                <div className="info-content">
-                  <h4 className="title">Address</h4>
-                  <em>#211 P,Sector7 Kurukshetra,haryana 136118</em>
-                </div>
-              </div>
-              <div className="address-list">
-                <div className="info-icon">
-                  <i className="flaticon-email" />
-                </div>
-                <div className="info-content">
-                  <h4 className="title">Email</h4>
-                  <em><a href="mailto:hello@coursementor.com/">hello@coursementor.com</a></em>
-                </div>
-              </div>
-              <div className="address-list">
-                <div className="info-icon">
-                  <i className="flaticon-call" />
-                </div>
-                <div className="info-content">
-                  <h4 className="title">Phone</h4>
-                  <em>1800-890-6477</em>
-                </div>
-              </div>
-            </div>
-            <ul className="social">
-              <li><a href="#">
-                <FontAwesomeIcon icon={faFacebook} />
-
-              </a></li>
-              <li><a href="#">
-                <FontAwesomeIcon icon={faTwitter} />
-              </a></li>
-              <li><a href="#">
-                <FontAwesomeIcon icon={faInstagram} /></a></li>
-            </ul>
-          </div>
-        </nav>
-        {/* Canvas Menu end */}
+        <Header />
       </div>
       {/*Full width header End*/}
       {/* Breadcrumbs Start */}
@@ -167,34 +368,53 @@ function FinalFilter(props) {
       {/* Breadcrumbs End */}
       <div className="container-fluid">
         <div className="row mb-3 mt-5">
-          <div className="col-md-2">
-            <div className="alert alert-info fade in alert-dismissible show" style={{ marginTop: '18px' }}>
-              <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style={{ fontSize: '20px' }}>×</span>
-              </button> Masters
+
+
+
+          {arrayCountry.map((element, index) =>
+          (
+            <div className="col-md-2" key={index}>
+              <div className="alert alert-info fade in alert-dismissible show" style={{ marginTop: '18px' }}>
+                <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true" style={{ fontSize: '20px' }} onClick={() => deleteCountryClick(element)}  >×</span>
+                </button>  {element}
+              </div>
             </div>
-          </div>
-          <div className="col-md-2">
-            <div className="alert alert-info fade in alert-dismissible show" style={{ marginTop: '18px' }}>
-              <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style={{ fontSize: '20px' }}>×</span>
-              </button> Engineering
+          ))}
+
+          {arrayAreaOfInterest.map((element, index) =>
+          (
+            <div className="col-md-2" key={index}>
+              <div className="alert alert-info fade in alert-dismissible show" style={{ marginTop: '18px' }}>
+                <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true" style={{ fontSize: '20px' }} onClick={() => deleteAreaOfInterestClick(element)}  >×</span>
+                </button>  {element}
+              </div>
             </div>
-          </div>
-          <div className="col-md-2">
-            <div className="alert alert-info fade in alert-dismissible show" style={{ marginTop: '18px' }}>
-              <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style={{ fontSize: '20px' }}>×</span>
-              </button> Design
-            </div>
-          </div>
-          <div className="col-md-2">
-            <div className="alert alert-info fade in alert-dismissible show" style={{ marginTop: '18px' }}>
-              <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style={{ fontSize: '20px' }}>×</span>
-              </button> Finance and Banking
-            </div>
-          </div>
+          ))}
+
+
+          {universityType !== "" ?
+            <div className="col-md-2" >
+              <div className="alert alert-info fade in alert-dismissible show" style={{ marginTop: '18px' }}>
+                <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true" style={{ fontSize: '20px' }} onClick={() => deleteuniversityTypeClick()}  >×</span>
+                </button>  {universityType}
+              </div>
+            </div> :
+            null
+          }
+          {courseDurationRange !== "" ?
+            <div className="col-md-2" >
+              <div className="alert alert-info fade in alert-dismissible show" style={{ marginTop: '18px' }}>
+                <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true" style={{ fontSize: '20px' }} onClick={() => deletecourseDurationRangeClick()}  >×</span>
+                </button>  Tuition Fees
+              </div>
+            </div> :
+            null
+          }
+
           <div className="col-md-2 mt-3">
             <div className="search-country">
               <form>
@@ -221,10 +441,10 @@ function FinalFilter(props) {
               <div className="search-country">
                 <div id="accordion">
                   <div className="card">
-                    <a className="card-link collapsed card-header" data-toggle="collapse" href="#collapseOne">
+                    <a className="card-link collapsed card-header" data-bs-toggle="collapse" href="#collapseOne">
                       Country
                     </a>
-                    <div id="collapseOne" className="collapse" data-parent="#accordion">
+                    <div id="collapseOne" className="collapse" data-bs-parent="#accordion">
                       <div className="card-body">
                         <form>
                           <div className="form-group d-flex serch-from">
@@ -234,34 +454,24 @@ function FinalFilter(props) {
                             <input type="search" className="form-control" placeholder="Search Country" id="search" />
                           </div>
                         </form>
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />United States
-                          </label>
-                        </div>
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />United Kingdom
-                          </label>
-                        </div>
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Australia
-                          </label>
-                        </div>
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Canada
-                          </label>
-                        </div>
+                        {/* start  for country */}
+                        {completeCountry.map((element, index) => (
+                          <div key={index}>
+                            <input type="checkbox" name="univeristyExam"
+                              value={element.name || ""}
+                              checked={!!element.following === true}
+                              onChange={handleuniveristyExamChange} /> {element.name}
+                          </div>
+                        ))}
+                        {/* end for country */}
                       </div>
                     </div>
                   </div>
                   <div className="card">
-                    <a className="card-header collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+                    <a className="card-header collapsed card-link" data-bs-toggle="collapse" href="#collapseTwo">
                       Area of Interest
                     </a>
-                    <div id="collapseTwo" className="collapse" data-parent="#accordion">
+                    <div id="collapseTwo" className="collapse" data-bs-parent="#accordion">
                       <div className="card-body">
                         <form>
                           <div className="form-group d-flex serch-from">
@@ -271,87 +481,66 @@ function FinalFilter(props) {
                             <input type="search" className="form-control" placeholder="Search" id="search" />
                           </div>
                         </form>
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Management
-                          </label>
-                        </div>
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Master
-                          </label>
-                        </div>
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Engineering
-                          </label>
-                        </div>
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Computers and Data Science
-                          </label>
-                        </div>
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Design
-                          </label>
-                        </div>
+                        {/* start  for country */}
+                        {completeAreaOfInterest.map((element, index) => (
+                          <div key={index}>
+                            <input type="checkbox" name="areaOfInterest"
+                              value={element.name || ""}
+                              checked={!!element.following === true}
+                              onChange={handleAreaOfInterestChange} /> {element.name}
+                          </div>
+                        ))}
+                        {/* end for country */}
                       </div>
                     </div>
                   </div>
                   <div className="card">
-                    <a className="card-header collapsed card-link" data-toggle="collapse" href="#collapseThree">
+                    <a className="card-header collapsed card-link" data-bs-toggle="collapse" href="#collapseThree">
                       University Type
                     </a>
-                    <div id="collapseThree" className="collapse" data-parent="#accordion">
+                    <div id="collapseThree" className="collapse" data-bs-parent="#accordion">
                       <div className="card-body">
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Fast Track
-                          </label>
-                        </div>
+                        <select className="form-control" value={universityType}
+                          onChange={(e) => handleuniversityTypeChange(e.target.value)}
+                        >
+                          <option value="">Select Type</option>
+                          <option value="Public">Public</option>
+                          <option value="Private">Private</option>
+                          <option value="Govt">Govt</option>
+                        </select>
                       </div>
                     </div>
                   </div>
                   <div className="card">
-                    <a className="card-header collapsed card-link" data-toggle="collapse" href="#collapse4">
+                    <a className="card-header collapsed card-link" data-bs-toggle="collapse" href="#collapse4">
                       Intake
                     </a>
-                    <div id="collapse4" className="collapse" data-parent="#accordion">
+                    <div id="collapse4" className="collapse" data-bs-parent="#accordion">
                       <div className="card-body">
                         <div className="form-check">
                           <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Apr - Jul 2022
+                            <input type="checkbox" className="form-check-input" value="Jan-April" />Jan - April
                           </label>
                         </div>
                         <div className="form-check">
                           <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Aug - Nov 2022
+                            <input type="checkbox" className="form-check-input" value="May-August" />May - August
                           </label>
                         </div>
                         <div className="form-check">
                           <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Dec - March 2023
+                            <input type="checkbox" className="form-check-input" value="Sep-Dec" />Sep - Dec
                           </label>
                         </div>
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Apr - Jul 2023
-                          </label>
-                        </div>
-                        <div className="form-check">
-                          <label className="form-check-label">
-                            <input type="checkbox" className="form-check-input" defaultValue />Aug - Nov 2023
-                          </label>
-                        </div>
+
                       </div>
                     </div>
                   </div>
                   <div className="card">
-                    <a className="card-header collapsed card-link" data-toggle="collapse" href="#collapse5">
+                    <a className="card-header collapsed card-link" data-bs-toggle="collapse" href="#collapse5">
                       Scholarship
                     </a>
-                    <div id="collapse5" className="collapse" data-parent="#accordion">
+                    <div id="collapse5" className="collapse" data-bs-parent="#accordion">
                       <div className="card-body">
                         <div className="form-check">
                           <label className="form-check-label">
@@ -362,63 +551,77 @@ function FinalFilter(props) {
                     </div>
                   </div>
                   <div className="card">
-                    <a className="card-header collapsed card-link" data-toggle="collapse" href="#collapse6">
+                    <a className="card-header collapsed card-link" data-bs-toggle="collapse" href="#collapse6">
                       Tution Fee Budget
                     </a>
-                    <div id="collapse6" className="collapse" data-parent="#accordion">
+                    <div id="collapse6" className="collapse" data-bs-parent="#accordion">
                       <div className="card-body">
-                        <form>
-                          <div className="slidecontainer">
-                            <input type="range" min={0} max={50} defaultValue={0} className="slider" id="myRange" />
-                            <p>Rs:<span id="demo">0</span></p>
-                          </div>
-                        </form>
+                        {tuitionFeeRange}L
+                        <div className="slider-parent">
+                          Rs.5L
+                          <input type="range" min="5" max="50" value={tuitionFeeRange}
+                            onChange={({ target: { value: radius } }) => {
+                              settuitionFeeRange(radius);
+                            }} />
+                          Rs.50L
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div className="card">
-                    <a className="card-header collapsed card-link" data-toggle="collapse" href="#collapse7">
+                    <a className="card-header collapsed card-link" data-bs-toggle="collapse" href="#collapse7">
                       Course Duration
                     </a>
-                    <div id="collapse7" className="collapse" data-parent="#accordion">
+                    <div id="collapse7" className="collapse" data-bs-parent="#accordion">
                       <div className="card-body">
-                        <form>
-                          <div className="slidecontainer">
-                            <input type="range" min={0} max={50} defaultValue={0} className="slider" id="myRange" />
-                            <p>Rs:<span id="demo">0</span></p>
-                          </div>
-                        </form>
+
+                        {courseDurationRange}
+                        <div className="slider-parent">
+                          3 month
+                          <input type="range" min="3" max="60" value={courseDurationRange}
+                            onChange={({ target: { value: radius } }) => {
+                              setcourseDurationRange(radius);
+                            }} />
+                          60 month
+                        </div>
+
                       </div>
                     </div>
                   </div>
                   <div className="card">
-                    <a className="card-header collapsed card-link" data-toggle="collapse" href="#collapse8">
+                    <a className="card-header collapsed card-link" data-bs-toggle="collapse" href="#collapse8">
                       English Proficiency Exam
                     </a>
-                    <div id="collapse8" className="collapse" data-parent="#accordion">
+                    <div id="collapse8" className="collapse" data-bs-parent="#accordion">
                       <div className="card-body">
                         <form>
                           <select className="form-control">
                             <option>Select</option>
-                            <option>IELTS Waiver Available</option>
-                            <option>IELTS Score</option>
+                            <option value="IELTS">IELTS</option>
+                            <option value="PTE">PTE</option>
+                            <option value="TOEFL">TOEFL</option>
+                            <option value="Duolingo">Duolingo</option>
+                            <option value="CPE">CPE</option>
+                            <option value="CAE">CAE</option>
+                            <option value="OET">OET</option>
                           </select>
                         </form>
                       </div>
                     </div>
                   </div>
                   <div className="card">
-                    <a className="card-header collapsed card-link" data-toggle="collapse" href="#collapse9">
+                    <a className="card-header collapsed card-link" data-bs-toggle="collapse" href="#collapse9">
                       Academic Proficiency Exam
                     </a>
-                    <div id="collapse9" className="collapse" data-parent="#accordion">
+                    <div id="collapse9" className="collapse" data-bs-parent="#accordion">
                       <div className="card-body">
                         <form>
                           <select className="form-control">
                             <option>Select</option>
-                            <option>GRE</option>
-                            <option>GMAT</option>
-                            <option>SAT</option>
+                            <option value="GRE">GRE</option>
+                            <option value="GMAT">GMAT</option>
+                            <option value="SAT">SAT</option>
+                            <option value="Other">Other</option>
                           </select>
                         </form>
                       </div>
@@ -427,7 +630,7 @@ function FinalFilter(props) {
                 </div>
               </div>
               <div className="text-center">
-                <a className="readon started apply-filter" href="#">Apply Filter</a>
+                <button type="button" className="readon started apply-filter" onClick={() => handleApplyFilter()}>Apply Filter</button>
               </div>
             </section>
           </div>
@@ -436,10 +639,10 @@ function FinalFilter(props) {
               {/* Nav pills */}
               <ul className="nav nav-pills" role="tablist">
                 <li className="nav-item">
-                  <a className="nav-link active" data-toggle="pill" href="#home">Universities (423)</a>
+                  <a className="nav-link active" data-bs-toggle="pill" href="#home">Universities ({universityNumber})</a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" data-toggle="pill" href="#menu1">Courses (14203)</a>
+                  <a className="nav-link" data-bs-toggle="pill" href="#menu1">Courses ({courseNumber})</a>
                 </li>
               </ul>
               {/* Tab panes */}
@@ -457,7 +660,7 @@ function FinalFilter(props) {
                         <span className="icon">
                           <FontAwesomeIcon icon={faStar} />
                         </span>
-                        <h3>15 +<br /><span>Dream</span></h3>
+                        <h3>{universityNumber} +<br /><span>Dream</span></h3>
                       </div>
                       <div className="overview-box green-light">
                         <span className="icon">
@@ -477,106 +680,62 @@ function FinalFilter(props) {
                       <h2><span className="icon">
                         <FontAwesomeIcon icon={faStar} />
 
-                      </span> 15 Dream Universities</h2>
+                      </span> {universityNumber}Dream Universities</h2>
+
                       <div className="row">
-                        <div className="col-md-6">
-                          <div className="uniBox">
-                            <div className="head">
-                              <div className="imgBox"><img src="assets/images/university/waterloouniversity.jpg" alt={178} id={178} /></div>
-                              <div className="details">
-                                <h4 href="#" className="pointer">University of Waterloo</h4>
-                                <p>Waterloo, Canada</p>
-                                <p><strong>Campus - </strong> Waterloo</p>
-                              </div>
-                              <div className="bookmark  d-none d-sm-block"><img className="pointer" src="https://images.leverageedu.com/assets/img/course-finder/Star.svg" alt="" /></div>
-                            </div>
-                            <div className="body">
-                              <div className="leftSection">
-                                <div className="data">
-                                  <FontAwesomeIcon icon={faUniversity} />
+                        {allUniversityValues.map((element, index) =>
+                        (
+                          <div className="col-md-6" key={index}>
+                            <div className="uniBox">
+                              <div className="head">
+                                <div className="imgBox"><img src={element.myimage[0].logo} alt="logo" /></div>
+                                <div className="details">
+                                  <h4 href="#" className="pointer">{element.myinformation[0].name}</h4>
+                                  <p>{element.myinformation[0].state}, {element.myinformation[0].country}</p>
 
-                                  <div className="details">
-                                    <h4>Public</h4>
-                                    <p>University type</p>
+                                </div>
+                                <div className="bookmark  d-none d-sm-block"><img className="pointer" src="https://images.leverageedu.com/assets/img/course-finder/Star.svg" alt="" /></div>
+                              </div>
+                              <div className="body">
+                                <div className="leftSection">
+                                  <div className="data">
+                                    <FontAwesomeIcon icon={faUniversity} />
+
+                                    <div className="details">
+                                      <h4>{element.myinformation[0].type}</h4>
+                                      <p>University Type</p>
+                                    </div>
+                                  </div>
+                                  <div className="data">
+                                    <FontAwesomeIcon icon={faLaptop} />
+                                    <div className="details">
+                                      <h4>{element.myoverview[0].foundedYear}</h4>
+                                      <p>Established Since</p>
+                                    </div>
+                                  </div>
+                                  <div className="data">
+                                    <FontAwesomeIcon icon={faStar} />
+                                    <div className="details">
+                                      <h4> {element.myoverview[0].ranking} </h4>
+                                      <p>NA Ranking</p>
+                                    </div>
                                   </div>
                                 </div>
-                                <div className="data">
-                                  <FontAwesomeIcon icon={faLaptop} />
-
-
-                                  <div className="details">
-                                    <h4>1956</h4>
-                                    <p>Established Since</p>
-                                  </div>
-                                </div>
-                                <div className="data">
-                                  <FontAwesomeIcon icon={faStar} />
-                                  <div className="details">
-                                    <h4> 163 </h4>
-                                    <p>QS Ranking</p>
-                                  </div>
+                                <div className="rightSection">
+                                  <div className="data">
+                                    <Link target="_blank" to={'/schools/' + element.myinformation[0].slug}
+                                    >
+                                      <FontAwesomeIcon icon={faCheckSquare} />
+                                      Know More</Link></div>
                                 </div>
                               </div>
-                              <div className="rightSection">
-                                <div className="data"><a href="#" target="_blank" className="pop-data">
-                                  <FontAwesomeIcon icon={faCheckSquare} />
-                                  Know More</a></div>
-                              </div>
-                            </div>
-                            <div className="foot"><button className="recommended"><span> RECOMMENDED COURSES (8) </span></button>
-                              <div className="custom-shortlist d-flex d-sm-none">Tap to Shortlist<div className="condition_btn shortlist"><img src="https://images.leverageedu.com/assets/img/course-finder/Star.svg" className="no-icon" alt="" /><img src="https://images.leverageedu.com/assets/img/course-finder/Star-filled.svg" className="yes-icon" alt="" /></div>
+                              <div className="foot"><button className="recommended"><span> RECOMMENDED COURSES (8) </span></button>
+                                <div className="custom-shortlist d-flex d-sm-none">Tap to Shortlist<div className="condition_btn shortlist"><img src="https://images.leverageedu.com/assets/img/course-finder/Star.svg" className="no-icon" alt="" /><img src="https://images.leverageedu.com/assets/img/course-finder/Star-filled.svg" className="yes-icon" alt="" /></div>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="uniBox">
-                            <div className="head">
-                              <div className="imgBox"><img src="assets/images/university/tufts.png" alt={178} id={178} /></div>
-                              <div className="details">
-                                <h4 href="#" className="pointer">Tufts University</h4>
-                                <p>Medford, United States</p>
-                                <p><strong>Campus - </strong> Waterloo</p>
-                              </div>
-                              <div className="bookmark  d-none d-sm-block"><img className="pointer" src="https://images.leverageedu.com/assets/img/course-finder/Star.svg" alt="" /></div>
-                            </div>
-                            <div className="body">
-                              <div className="leftSection">
-                                <div className="data">
-                                  <FontAwesomeIcon icon={faUniversity} />
-
-                                  <div className="details">
-                                    <h4>Public</h4>
-                                    <p>University type</p>
-                                  </div>
-                                </div>
-                                <div className="data">
-                                  <FontAwesomeIcon icon={faLaptop} />
-                                  <div className="details">
-                                    <h4>1956</h4>
-                                    <p>Established Since</p>
-                                  </div>
-                                </div>
-                                <div className="data">
-                                  <FontAwesomeIcon icon={faStar} />
-                                  <div className="details">
-                                    <h4> 163 </h4>
-                                    <p>NA Ranking</p>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="rightSection">
-                                <div className="data"><a href="#" target="_blank" className="pop-data">
-                                  <FontAwesomeIcon icon={faCheckSquare} />
-                                  Know More</a></div>
-                              </div>
-                            </div>
-                            <div className="foot"><button className="recommended"><span> RECOMMENDED COURSES (8) </span></button>
-                              <div className="custom-shortlist d-flex d-sm-none">Tap to Shortlist<div className="condition_btn shortlist"><img src="https://images.leverageedu.com/assets/img/course-finder/Star.svg" className="no-icon" alt="" /><img src="https://images.leverageedu.com/assets/img/course-finder/Star-filled.svg" className="yes-icon" alt="" /></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                        ))}
                       </div>
                       <div className="text-center mt-5">
                         <a className="readon started apply-filter" href="#">View More Dream Universities</a>
@@ -628,9 +787,9 @@ function FinalFilter(props) {
                               </div>
                               <div className="rightSection">
                                 <div className="data"><a href="#" target="_blank" className="pop-data">
-                                <FontAwesomeIcon icon={faCheckSquare} />
-                                  
-                                Know More</a></div>
+                                  <FontAwesomeIcon icon={faCheckSquare} />
+
+                                  Know More</a></div>
                               </div>
                             </div>
                             <div className="foot"><button className="recommended"><span> RECOMMENDED COURSES (8) </span></button>
@@ -652,7 +811,7 @@ function FinalFilter(props) {
                             </div>
                             <div className="body">
                               <div className="leftSection">
-                                <div className="data">     <FontAwesomeIcon icon={faUniversity}  />
+                                <div className="data">     <FontAwesomeIcon icon={faUniversity} />
                                   <div className="details">
                                     <h4>Public</h4>
                                     <p>University type</p>
@@ -672,7 +831,7 @@ function FinalFilter(props) {
                                 </div>
                               </div>
                               <div className="rightSection">
-                                <div className="data"><a href="#" target="_blank" className="pop-data">    <FontAwesomeIcon icon={faCheckSquare}  />Know More</a></div>
+                                <div className="data"><a href="#" target="_blank" className="pop-data">    <FontAwesomeIcon icon={faCheckSquare} />Know More</a></div>
                               </div>
                             </div>
                             <div className="foot"><button className="recommended"><span> RECOMMENDED COURSES (8) </span></button>
@@ -688,7 +847,7 @@ function FinalFilter(props) {
                     </div>
                     <div className="dreamuniversity mt-5">
                       <h2><span className="icon">
-                      <FontAwesomeIcon icon={faShield}  />
+                        <FontAwesomeIcon icon={faShield} />
                       </span> 255 Safe Universities</h2>
                       <div className="row">
                         <div className="col-md-6">
@@ -704,7 +863,7 @@ function FinalFilter(props) {
                             </div>
                             <div className="body">
                               <div className="leftSection">
-                                <div className="data">     <FontAwesomeIcon icon={faUniversity}  />
+                                <div className="data">     <FontAwesomeIcon icon={faUniversity} />
                                   <div className="details">
                                     <h4>Public</h4>
                                     <p>University type</p>
@@ -724,7 +883,7 @@ function FinalFilter(props) {
                                 </div>
                               </div>
                               <div className="rightSection">
-                                <div className="data"><a href="#" target="_blank" className="pop-data">    <FontAwesomeIcon icon={faCheckSquare}  />Know More</a></div>
+                                <div className="data"><a href="#" target="_blank" className="pop-data">    <FontAwesomeIcon icon={faCheckSquare} />Know More</a></div>
                               </div>
                             </div>
                             <div className="foot"><button className="recommended"><span> RECOMMENDED COURSES (8) </span></button>
@@ -746,7 +905,7 @@ function FinalFilter(props) {
                             </div>
                             <div className="body">
                               <div className="leftSection">
-                                <div className="data">     <FontAwesomeIcon icon={faUniversity}  />
+                                <div className="data">     <FontAwesomeIcon icon={faUniversity} />
                                   <div className="details">
                                     <h4>Public</h4>
                                     <p>University type</p>
@@ -766,7 +925,7 @@ function FinalFilter(props) {
                                 </div>
                               </div>
                               <div className="rightSection">
-                                <div className="data"><a href="#" target="_blank" className="pop-data">    <FontAwesomeIcon icon={faCheckSquare}  />Know More</a></div>
+                                <div className="data"><a href="#" target="_blank" className="pop-data">    <FontAwesomeIcon icon={faCheckSquare} />Know More</a></div>
                               </div>
                             </div>
                             <div className="foot"><button className="recommended"><span> RECOMMENDED COURSES (8) </span></button>
@@ -784,134 +943,62 @@ function FinalFilter(props) {
                 </div>
                 <div id="menu1" className="tab-pane fade"><br />
                   <div className="unv-coures">
-                    <div className="courseBox mb-3">
-                      <div className="courseData">
-                        <div className="head-title"><span className="title">Masters - Architecture</span></div>
-                        <div className="university-details"><img src="assets/images/university/virginiauniversity.jpg" className="uni-logo" alt={9} id={9} />
-                          <div className="details">
-                            <h5>University of Virginia</h5>
-                            <p>Charlottesville, United States</p>
-                          </div>
-                        </div>
-                        <div className="facilities">
-                          <div className="data">
-                            <span>
-                            <FontAwesomeIcon icon={faCreditCard} />
-                            </span>
-                            <div className="dataDetails">
-                              <h5>USD 31686</h5>
-                              <p> Tuition Fee </p>
+
+                    {allCourseValues.map((element, index) =>
+                    (
+                      <div className="courseBox mb-3" key={index}>
+                        <div className="courseData">
+                          <div className="head-title"><span className="title">{element.courseName} - {element.areaOfInterest}</span></div>
+                          <div className="university-details"><img src="assets/images/university/virginiauniversity.jpg" className="uni-logo" alt={9} id={9} />
+                            <div className="details">
+                              <h5>{element.universities[0].information[0].name}</h5>
+                              <p>{element.universities[0].information[0].state}, {element.universities[0].information[0].country}</p>
                             </div>
                           </div>
-                          <div className="data">
-                            <span>
-                            <FontAwesomeIcon icon={faHistory} />
-                             </span>
-                            <div className="dataDetails">
-                              <h5>3 Months</h5>
-                              <p> Duration </p>
+                          <div className="facilities">
+                            <div className="data">
+                              <span>
+                                <FontAwesomeIcon icon={faCreditCard} />
+                              </span>
+                              <div className="dataDetails">
+                                <h5>{element.currency + " " + element.tuitionFee}</h5>
+                                <p> Tuition Fee </p>
+                              </div>
+                            </div>
+                            <div className="data">
+                              <span>
+                                <FontAwesomeIcon icon={faHistory} />
+                              </span>
+                              <div className="dataDetails">
+                                <h5>{element.duration} Months</h5>
+                                <p> Duration </p>
+                              </div>
+                            </div>
+                            <div className="data" >
+                              <span>
+                                <FontAwesomeIcon icon={faHistory} />
+                              </span>
+                              <div className="dataDetails">
+                                <h5>{element.month} </h5>
+                                <p> Intake </p>
+                              </div>
+                            </div>
+                            <div className="data" >
+                              <span>
+                                <FontAwesomeIcon icon={faHistory} />
+                              </span>
+                              <div className="dataDetails">
+                                <h5>{element.english} </h5>
+                                <p> English Proficiency </p>
+                              </div>
                             </div>
                           </div>
-                          <div className="data" />
+                          <div className="action"><button>Apply Now</button></div>
                         </div>
-                        <div className="action"><button>Apply Now</button></div>
                       </div>
-                    </div>
-                    <div className="courseBox mb-3">
-                      <div className="courseData">
-                        <div className="head-title"><span className="title">Masters - Architecture</span></div>
-                        <div className="university-details"><img src="assets/images/university/virginiauniversity.jpg" className="uni-logo" alt={9} id={9} />
-                          <div className="details">
-                            <h5>University of Virginia</h5>
-                            <p>Charlottesville, United States</p>
-                          </div>
-                        </div>
-                        <div className="facilities">
-                          <div className="data">
-                            <span>
-                            <FontAwesomeIcon icon={faCreditCard} />
-                   </span>
-                            <div className="dataDetails">
-                              <h5>USD 31686</h5>
-                              <p> Tuition Fee </p>
-                            </div>
-                          </div>
-                          <div className="data">
-                            <span>
-                            <FontAwesomeIcon icon={faHistory} />
-                            </span>
-                            <div className="dataDetails">
-                              <h5>3 Months</h5>
-                              <p> Duration </p>
-                            </div>
-                          </div>
-                          <div className="data" />
-                        </div>
-                        <div className="action"><button>Apply Now</button></div>
-                      </div>
-                    </div>
-                    <div className="courseBox mb-3">
-                      <div className="courseData">
-                        <div className="head-title"><span className="title">Masters - Architecture</span></div>
-                        <div className="university-details"><img src="assets/images/university/virginiauniversity.jpg" className="uni-logo" alt={9} id={9} />
-                          <div className="details">
-                            <h5>University of Virginia</h5>
-                            <p>Charlottesville, United States</p>
-                          </div>
-                        </div>
-                        <div className="facilities">
-                          <div className="data">
-                            <span>
-                            <FontAwesomeIcon icon={faCreditCard}  />
-                            </span>
-                            <div className="dataDetails">
-                              <h5>USD 31686</h5>
-                              <p> Tuition Fee </p>
-                            </div>
-                          </div>
-                          <div className="data">
-                            <span>   <FontAwesomeIcon icon={faHistory}  /></span>
-                            <div className="dataDetails">
-                              <h5>3 Months</h5>
-                              <p> Duration </p>
-                            </div>
-                          </div>
-                          <div className="data" />
-                        </div>
-                        <div className="action"><button>Apply Now</button></div>
-                      </div>
-                    </div>
-                    <div className="courseBox mb-3">
-                      <div className="courseData">
-                        <div className="head-title"><span className="title">Masters - Architecture</span></div>
-                        <div className="university-details"><img src="assets/images/university/virginiauniversity.jpg" className="uni-logo" alt={9} id={9} />
-                          <div className="details">
-                            <h5>University of Virginia</h5>
-                            <p>Charlottesville, United States</p>
-                          </div>
-                        </div>
-                        <div className="facilities">
-                          <div className="data">
-                            <span>
-                              
-                            <FontAwesomeIcon icon={faCreditCard}  /></span>
-                            <div className="dataDetails">
-                              <h5>USD 31686</h5>
-                              <p> Tuition Fee </p>
-                            </div>
-                          </div>
-                          <div className="data">
-                            <span>    <FontAwesomeIcon icon={faHistory}  /></span>
-                            <div className="dataDetails">
-                              <h5>3 Months</h5>
-                              <p> Duration </p>
-                            </div>
-                          </div>
-                          <div className="data" />
-                        </div>
-                        <div className="action"><button>Apply Now</button></div>
-                      </div>
-                    </div>
+                    ))}
+
+
                   </div>
                 </div>
               </div>
@@ -919,136 +1006,8 @@ function FinalFilter(props) {
           </div>
         </div>
       </div>
-      {/* Main content End */}
-      {/* Footer Start */}
-      <footer id="rs-footer" className="rs-footer">
-        <div className="footer-top">
-          <div className="container">
-            <div className="row">
-              <div className="col-lg-3 col-md-12 col-sm-12 footer-widget">
-                <div className="footer-logo mb-30">
-                  <a href="index.html"><img src="assets/images/logo.png" alt="" /></a>
-                </div>
-                <div className="textwidget pb-30">
-                  <p>Coursementor.com is a 24*7 Online Tutoring Platform. Get online tutoring on-demand on
-                    hundreds of subjects or topics, whenever you need it.</p>
-                </div>
-                <ul className="footer-social md-mb-30">
-                  <li>
-                    <a href="#" target="_blank"><span>
-                      <FontAwesomeIcon icon={faFacebook} />
-                    </span></a>
-                  </li>
-                  <li>
-                    <a href="# " target="_blank"><span>   <FontAwesomeIcon icon={faTwitter} /></span></a>
-                  </li>
-                  <li>
-                    <a href="# " target="_blank"><span>
-                      <FontAwesomeIcon icon={faPinterest} />
-                    </span></a>
-                  </li>
-                  <li>
-                    <a href="# " target="_blank"><span>    <FontAwesomeIcon icon={faInstagram} /></span></a>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-lg-3 col-md-12 col-sm-12 pl-45 md-pl-15 md-mb-30">
-                <h3 className="widget-title">Policy</h3>
-                <ul className="site-map">
-                  <li><a href="#">Terms and Conditions</a></li>
-                  <li><a href="#">Privacy Policy</a></li>
-                  <li><a href="#">Refund Policy</a></li>
-                  <li><a href="#">Honor Code</a></li>
-                  <li><a href="#">Mentors</a></li>
-                  <li><a href="#">Blog</a></li>
-                </ul>
-              </div>
-              <div className="col-lg-3 col-md-12 col-sm-12 md-mb-30">
-                <h3 className="widget-title">Contact Info</h3>
-                <ul className="address-widget">
-                  <li>
-                    <i className="flaticon-location" />
-                    <div className="desc">#211 P,Sector7 Kurukshetra,haryana 136118</div>
-                  </li>
-                  <li>
-                    <i className="flaticon-call" />
-                    <div className="desc">
-                      <a href="tel:1800-890-6477">1800-890-6477</a>
-                    </div>
-                  </li>
-                  <li>
-                    <i className="flaticon-email" />
-                    <div className="desc">
-                      <a href="mailto:hello@coursementor.com">hello@coursementor.com</a>
-                    </div>
-                  </li>
-                  <li>
-                    <i className="flaticon-clock-1" />
-                    <div className="desc">
-                      Our Mentors are ready to help 24/7
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-lg-3 col-md-12 col-sm-12">
-                <h3 className="widget-title">Exploring</h3>
-                <ul className="site-map">
-                  <li><a href="index.html">Home</a></li>
-                  <li><a href="about.html">About Us</a></li>
-                  <li><a href="blog.html">Blog</a></li>
-                  <li><a href="contact.html">Contact Us</a></li>
-                </ul>
-                {/* <p className="widget-desc">We denounce with righteous and in and dislike men who are so beguiled and demo realized.</p> */}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <div className="container">
-            <div className="row y-middle">
-              {/* <div className="col-lg-6 text-right md-mb-10 order-last">
-                                        <ul className="copy-right-menu">
-                                           <li><a href="index.html">Home</a></li>
-                                           <li><a href="about.html">About</a></li>
-                                           <li><a href="blog.html">Blog</a></li>
-                                           <li><a href="shop.html">Shop</a></li>
-                                           <li><a href=case-studies-single.html></a></li>
-                                        </ul>
-                                    </div> */}
-              <div className="col-lg-6">
-                <div className="copyright">
-                  <p>©Copyright 2018 - 2022<a href="http://Coursementor.com/">Coursementor.com</a> All
-                    rights reserved.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
-      {/* Footer End */}
-      {/* start scrollUp  */}
-      <div id="scrollUp" className="orange-color">
+      <Footer />
 
-        <FontAwesomeIcon icon={faAngleUp} />
-      </div>
-      {/* End scrollUp  */}
-      {/* Search Modal Start */}
-      <div aria-hidden="true" className="modal fade search-modal" role="dialog" tabIndex={-1}>
-        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-          <span className="flaticon-cross" />
-        </button>
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="search-block clearfix">
-              <form>
-                <div className="form-group">
-                  <input className="form-control" placeholder="Search Here..." type="text" />
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
 

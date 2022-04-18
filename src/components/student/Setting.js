@@ -84,9 +84,9 @@ export default function Setting() {
                                         <div className="col-sm-12">
                                             <form onSubmit={setting}>
                                                 <div className="form-group">
-                                                    <label htmlFor="password">Enter New Password<span class="req-star">*</span></label>
+                                                    <label htmlFor="password">Enter New Password<span className="req-star">*</span></label>
                                                     <input required="" name="password" type="password" id="password" className="form-control"
-                                                        value={password}
+                                                        value={password || ""}
                                                         onChange={(e) => setpassword(e.target.value)}
                                                         placeholder="Password"
                                                     />
@@ -94,9 +94,9 @@ export default function Setting() {
 
                                                 </div>
                                                 <div className="form-group">
-                                                    <label htmlFor="c_password">Confirm Password<span class="req-star">*</span></label>
+                                                    <label htmlFor="c_password">Confirm Password<span className="req-star">*</span></label>
                                                     <input required="" name="c_password" type="password" id="c_password" className="form-control"
-                                                        value={conformPassword}
+                                                        value={conformPassword || ""}
                                                         onChange={(e) => setconformPassword(e.target.value)}
                                                         placeholder="Confirm Password"
                                                     />

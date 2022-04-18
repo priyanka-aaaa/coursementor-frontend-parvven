@@ -276,7 +276,7 @@ export default function Intake() {
                                                     <div className="row">
                                                         <div className="col">
                                                         <div className="form-group ">
-                                                            <label className="form-label">Year<span class="req-star">*</span></label>
+                                                            <label className="form-label">Year<span className="req-star">*</span></label>
         
                                                             <select required
                                                                 className="form-control"
@@ -297,7 +297,7 @@ export default function Intake() {
                                                         </div>
                                                         <div className="col">
                                                         <div className="form-group ">
-                                                            <label className="form-label">Month<span class="req-star">*</span>
+                                                            <label className="form-label">Month<span className="req-star">*</span>
                                                             </label>
         
                                                             <select
@@ -369,7 +369,7 @@ export default function Intake() {
                                                     <div className="row">
                                                         <div className="col">
                                                         <div className="form-group ">
-                                                            <label className="form-label">Year<span class="req-star">*</span></label>
+                                                            <label className="form-label">Year<span className="req-star">*</span></label>
                                                             <select required
                                                                 className="form-control"
                                                                 placeholder="Year" name="year"
@@ -388,7 +388,7 @@ export default function Intake() {
                                                         </div>
                                                         <div className="col">
                                                         <div className="form-group ">
-                                                            <label className="form-label">Month<span class="req-star">*</span>
+                                                            <label className="form-label">Month<span className="req-star">*</span>
                                                             </label>
                                                             <select
                                                                 required

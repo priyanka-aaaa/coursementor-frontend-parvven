@@ -29,11 +29,9 @@ function StudentLayout(props) {
     const [email, setemail] = useState();
     const [notification, setnotification] = useState([]);
     const [resultLength, setresultLength] = useState();
-
-
-
     const [studentEmail, setstudentEmail] = useState();
     const [studentId, setstudentId] = useState();
+    const [currentMenu, setcurrentMenu] = useState("");
     function handletoogleClick() {
         if (width === "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion") {
             setwidth("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled")
@@ -67,7 +65,7 @@ function StudentLayout(props) {
                 .then(data => {
                     var myresults = data.notifications
                     setnotification(data.notifications)
-var resultLength = Object.keys(myresults).length
+                    var resultLength = Object.keys(myresults).length
                     setresultLength(resultLength)
                 })
         }
@@ -75,9 +73,13 @@ var resultLength = Object.keys(myresults).length
             var studentEmail = "";
             setredirectToReferrer("true")
         }
-
+        var currentUrl = window.location.href;
+        var splitcurrentUrl = currentUrl.split("student/")
+        setcurrentMenu(splitcurrentUrl[1])
     }, [])
-
+    function handleCurrentClick(value) {
+        setcurrentMenu(value)
+    }
     function logout() {
         localStorage.removeItem("studentId");
         localStorage.removeItem("studentToken");
@@ -85,7 +87,7 @@ var resultLength = Object.keys(myresults).length
         localStorage.removeItem("studentEmail");
         window.location.href = "/Studentlogin";
     }
-    
+
 
     function getRoutes(routes) {
         return routes.map((prop, key) => {
@@ -115,7 +117,7 @@ var resultLength = Object.keys(myresults).length
                     {/* <div className="sidebar-brand-icon ">
                         CM
                     </div> */}
-                    <a className="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+                    <span className="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                         {width === "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" ?
                             <Link to={'/student/dashboard'}  >
                                 <img src={images["small-dash-logo.png"]} alt="" />
@@ -128,42 +130,92 @@ var resultLength = Object.keys(myresults).length
                         }
                         <div className="sidebar-brand-text mx-3">
                         </div>
-                    </a>
+                    </span>
                     <hr className="sidebar-divider my-0" />
-                    <li className="nav-item ">
-                        <Link to={'/student/dashboard'} className="nav-link current-tab" title="Dashboard" >
-                            <i className="fas fa-fw fa-tachometer-alt"></i>
-                            <span> <FontAwesomeIcon icon={faDashboard} />Dashboard          </span></Link>
-                    </li>
+                    {currentMenu === "dashboard" ?
+                        <li className="nav-item " onClick={() => handleCurrentClick("dashboard")}>
+                            <Link to={'/student/dashboard'} className="nav-link current-tab" title="Dashboard" >
+                                <i className="fas fa-fw fa-tachometer-alt"></i>
+                                <span> <FontAwesomeIcon icon={faDashboard} />Dashboard  </span></Link>
+                        </li>
+                        :
+                        <li className="nav-item " onClick={() => handleCurrentClick("dashboard")}>
+                            <Link to={'/student/dashboard'} className="nav-link" title="Dashboard" >
+                                <i className="fas fa-fw fa-tachometer-alt"></i>
+                                <span> <FontAwesomeIcon icon={faDashboard} />Dashboard  </span></Link>
+                        </li>
+                    }
+                    {currentMenu === "applicationProfile" ?
+                        <li className="nav-item" onClick={() => handleCurrentClick("applicationProfile")}>
 
-                    <li className="nav-item">
+                            <Link to={'/student/applicationProfile'} className="nav-link current-tab" tiele="Application Profile">
+                                <i className="fas fa-file-alt"></i>
+                                <span><FontAwesomeIcon icon={faAddressBook} />Application Profile</span></Link>
+                        </li>
+                        :
+                        <li className="nav-item" onClick={() => handleCurrentClick("applicationProfile")}>
 
-                        <Link to={'/student/applicationProfile'} className="nav-link" tiele="Application Profile">
-                            <i className="fas fa-file-alt"></i>
-                            <span><FontAwesomeIcon icon={faAddressBook} />Application Profile</span></Link>
-                    </li>
-                    <li className="nav-item ">
-                        <Link to={'/student/document'} className="nav-link" href="#" tiele="My Documents" >
-                            <i className="fas fa-file-upload"></i>
-                            <span><FontAwesomeIcon icon={faFile} />My Documents</span></Link>
-                    </li>
-                    <li className="nav-item ">
-                        <Link to={'/student/bookmark'} className="nav-link" href="#" title="Bookmark">
-                            <i className="fas fa-bookmark"></i>
-                            <span><FontAwesomeIcon icon={faBookmark} />Bookmark</span></Link>
-                    </li>
-                    <li className="nav-item ">
-                        <Link to={'/student/message'} className="nav-link" href="#" title="Settings"
-                           
-                        >
-                            <i className="fas fa-bookmark"></i>
-                            <span><FontAwesomeIcon icon={faEnvelope} />Message</span></Link>
-                    </li>
-                    <li className="nav-item ">
-                        <Link to={'/student/setting'} className="nav-link" href="#" title="Settings">
-                            <i className="fas fa-bookmark"></i>
-                            <span><FontAwesomeIcon icon={faCog} /> Settings</span></Link>
-                    </li>
+                            <Link to={'/student/applicationProfile'} className="nav-link" tiele="Application Profile">
+                                <i className="fas fa-file-alt"></i>
+                                <span><FontAwesomeIcon icon={faAddressBook} />Application Profile</span></Link>
+                        </li>
+                    }
+                    {currentMenu === "document" ?
+                        <li className="nav-item " onClick={() => handleCurrentClick("document")}>
+                            <Link to={'/student/document'} className="nav-link current-tab" href="#" tiele="My Documents" >
+                                <i className="fas fa-file-upload"></i>
+                                <span><FontAwesomeIcon icon={faFile} />My Documents</span></Link>
+                        </li>
+                        :
+                        <li className="nav-item " onClick={() => handleCurrentClick("document")}>
+                            <Link to={'/student/document'} className="nav-link" href="#" tiele="My Documents" >
+                                <i className="fas fa-file-upload"></i>
+                                <span><FontAwesomeIcon icon={faFile} />My Documents</span></Link>
+                        </li>
+                    }
+                    {currentMenu === "bookmark" ?
+                        <li className="nav-item " onClick={() => handleCurrentClick("bookmark")}>
+                            <Link to={'/student/bookmark'} className="nav-link current-tab" href="#" title="Bookmark">
+                                <i className="fas fa-bookmark"></i>
+                                <span><FontAwesomeIcon icon={faBookmark} />Bookmark</span></Link>
+                        </li>
+                        :
+                        <li className="nav-item " onClick={() => handleCurrentClick("bookmark")}>
+                            <Link to={'/student/bookmark'} className="nav-link" href="#" title="Bookmark">
+                                <i className="fas fa-bookmark"></i>
+                                <span><FontAwesomeIcon icon={faBookmark} />Bookmark</span></Link>
+                        </li>
+                    }
+                    {currentMenu === "Message" ?
+                        <li className="nav-item " onClick={() => handleCurrentClick("Message")}>
+                            <Link to={'/student/message'} className="nav-link current-tab" href="#" title="Settings"
+
+                            >
+                                <i className="fas fa-bookmark"></i>
+                                <span><FontAwesomeIcon icon={faEnvelope} />Message</span></Link>
+                        </li>
+                        :
+                        <li className="nav-item " onClick={() => handleCurrentClick("Message")}>
+                            <Link to={'/student/message'} className="nav-link" href="#" title="Settings"
+
+                            >
+                                <i className="fas fa-bookmark"></i>
+                                <span><FontAwesomeIcon icon={faEnvelope} />Message</span></Link>
+                        </li>
+                    }
+                    {currentMenu === "Settings" ?
+                        <li className="nav-item " onClick={() => handleCurrentClick("Settings")}>
+                            <Link to={'/student/setting'} className="nav-link current-tab" href="#" title="Settings">
+                                <i className="fas fa-bookmark"></i>
+                                <span><FontAwesomeIcon icon={faCog} /> Settings</span></Link>
+                        </li>
+                        :
+                        <li className="nav-item " onClick={() => handleCurrentClick("Settings")}>
+                            <Link to={'/student/setting'} className="nav-link" href="#" title="Settings">
+                                <i className="fas fa-bookmark"></i>
+                                <span><FontAwesomeIcon icon={faCog} /> Settings</span></Link>
+                        </li>
+                    }
                     <div className="text-center d-none d-md-inline">
                         <button title="Sidenar-toggle" className="rounded-circle border-0" id="sidebarToggle" onClick={() => handletoogleClick()}>
                             <i className="fa-solid fa-arrow-right"></i>
@@ -320,19 +372,19 @@ var resultLength = Object.keys(myresults).length
                                             <li className="nav-item dropdown no-arrow">
 
                                                 <a className="nav-link dropdown-toggle" href="#collapseEleven1" id="userDropdown2" role="button" data-bs-toggle="collapse" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-envelope fa-fw"></i>
+                                                    <i className="fas fa-envelope fa-fw"></i>
                                                     <FontAwesomeIcon icon={faEnvelope} />
 
 
 
                                                     {resultLength !== 0 ?
-                                                        <span class="badge badge-danger badge-counter">{resultLength}</span>
+                                                        <span className="badge badge-danger badge-counter">{resultLength}</span>
                                                         : null}
                                                 </a>
 
                                                 <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown2" id="collapseEleven1" data-bs-parent="#accordion" >
-                                                    {notification.map((element) => (
-                                                        <Link to={'/student/message'}
+                                                    {notification.map((element, index) => (
+                                                        <Link to={'/student/message'} key={index}
 
 
                                                             className="dropdown-item"
@@ -373,9 +425,9 @@ var resultLength = Object.keys(myresults).length
                                                 </a>
                                             </div>
 
-                                            
-                                          
-                                          
+
+
+
 
                                             <div className="topbar-divider d-none d-sm-block"></div>
                                             <li className="nav-item dropdown no-arrow">

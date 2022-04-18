@@ -24,8 +24,10 @@ export default function ExtraCurricultarActivityProfile() {
     const [down, setdown] = useState("1");
     const [up, setup] = useState("0");
     useEffect(() => {
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
+        if (studentId !== null) {
         const url = process.env.REACT_APP_SERVER_URL + 'student/activities';
         fetch(url, {
             method: 'GET',
@@ -42,6 +44,7 @@ export default function ExtraCurricultarActivityProfile() {
                     setFormValues(data.studentActivities)
                 }
             })
+        }
     }, [])
     function handleClick() {
         if (down === "1") {

@@ -40,8 +40,10 @@ export default function EnglishProficiencyDocument() {
     const [down, setdown] = useState("1");
     const [up, setup] = useState("0");
     useEffect(() => {
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
+        if (studentId !== null) {
         function englishProficiencyAllDetails() {
             fetch(process.env.REACT_APP_SERVER_URL + 'student/englishProficiencyDocument', {
                 method: 'get',
@@ -64,6 +66,7 @@ export default function EnglishProficiencyDocument() {
                 })
         }
         englishProficiencyAllDetails();
+    }
     }, [])
     function englishProficiencyAll() {
         fetch(process.env.REACT_APP_SERVER_URL + 'student/englishProficiencyDocument', {

@@ -34,8 +34,10 @@ export default function RecommendationDocuments() {
     const [up, setup] = useState("0");
   
     useEffect(() => {
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
+        if (studentId !== null) {
         function recommendationAllDetails() {
             fetch(process.env.REACT_APP_SERVER_URL + 'student/recommendationDocument', {
                 method: 'get',
@@ -57,6 +59,7 @@ export default function RecommendationDocuments() {
                 })
         }
         recommendationAllDetails()
+    }
     }, [])
     function handleClick() {
         if (down === "1") {

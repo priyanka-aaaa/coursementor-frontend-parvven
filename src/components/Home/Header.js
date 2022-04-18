@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faPlus, faTrash, faPen, faAngleDown, faAngleUp, faBars, faSearch,faClose
+  faPlus, faTrash, faPen, faAngleDown, faAngleUp, faBars, faSearch, faClose
 
 } from '@fortawesome/free-solid-svg-icons';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { Modal, Button } from 'react-bootstrap';
-
+import SearchBar from "./SearchBar";
+import BookData from "./Data.json";
 function importAll(r) {
   let images = {};
   r.keys().forEach((item, index) => { images[item.replace('./', '')] = r(item); });
@@ -17,9 +18,21 @@ const images = importAll(require.context('../../images', false, /\.(png|jpe?g|sv
 function Header(props) {
   const [textflag, settextflag] = useState("-500px");
   const [display, setdisplay] = useState("-500px");
+  const [searchData, setsearchData] = useState([]);
 
-  
+
   const [showModal, setshowModal] = useState(false);
+  useEffect(() => {
+    const url1 = process.env.REACT_APP_SERVER_URL + 'universitySuggestion'
+    fetch(url1, {
+      method: 'get',
+    })
+      .then(response => response.json())
+      .then(data => {
+        var myDatabaseValue = data.suggestion
+        setsearchData(myDatabaseValue)
+      })
+  }, [])
   function open() {
     setshowModal(true)
   }
@@ -101,17 +114,13 @@ function Header(props) {
                   </nav>
 
                 </div> {/* //.main-menu */}
+
                 <div className="expand-btn-inner search-icon hidden-md">
                   <ul>
                     <li className="sidebarmenu-search">
 
                       <a onClick={() => open()} className="frontend-main-search">
-
                         <FontAwesomeIcon icon={faSearch} /></a>
-
-
-
-
                     </li>
                     <li>
 
@@ -213,8 +222,8 @@ function Header(props) {
         animation={true}
       >
         <button type="button" className="close" onClick={() => close()}  >
-        {/* <i class="fa fa-close fa-5x"></i> */}
-        <FontAwesomeIcon icon={faClose} />
+        
+          <FontAwesomeIcon icon={faClose} />
           <span className="flaticon-cross" />
         </button>
         <div className="">
@@ -223,7 +232,8 @@ function Header(props) {
               <form>
                 <div className="form-group">
                   <label>Search</label>
-                  <input className="form-control" placeholder="Enter course, college, exam or destination" type="text" />
+                  <SearchBar placeholder="Enter course, college, exam or destination" data={searchData} />
+
                 </div>
               </form>
               <div className="top-country">

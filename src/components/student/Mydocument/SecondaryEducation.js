@@ -32,8 +32,10 @@ export default function SecondaryEducation() {
 
 
     useEffect(() => {
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
+        if (studentId !== null) {
         function secondaryEducationAllDetails() {
             fetch(process.env.REACT_APP_SERVER_URL + 'student/educationDocument', {
                 method: 'get',
@@ -62,6 +64,7 @@ export default function SecondaryEducation() {
                 })
         }
         secondaryEducationAllDetails();
+    }
     }, [])
     function viewMyPassportDocument() {
         setmyPassportDocx("1")

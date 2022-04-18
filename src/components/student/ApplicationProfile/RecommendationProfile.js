@@ -27,8 +27,10 @@ export default function RecommendationProfile() {
     const [up, setup] = useState("0");
 
     useEffect(() => {
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
+        if (studentId !== null) {
         const url = process.env.REACT_APP_SERVER_URL + 'student/profileRecommendations';
         fetch(url, {
             method: 'GET',
@@ -45,6 +47,7 @@ export default function RecommendationProfile() {
                     setFormValues(data.studentProfileRecommendations)
                 }
             })
+        }
     }, [])
     let handleChange = (i, e) => {
 

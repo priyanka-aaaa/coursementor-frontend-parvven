@@ -22,6 +22,7 @@ export default function Message() {
         setMounted(mounted)
         setstudentId(studentId)
         setstudentName(studentName)
+        if (studentId !== null) {
         function completeMessage() {
             setmyloader("true")
             axios.get(process.env.REACT_APP_SERVER_URL + 'student/messages', { headers: { 'Authorization': mounted } })
@@ -68,6 +69,7 @@ export default function Message() {
 
         }
         completeMessage();
+    }
     }, [])
 
     function handleFormSubmit(event) {
@@ -212,7 +214,7 @@ export default function Message() {
                                                 <div className="form-group">
                                                     <label className="form-label">Message
                                                         <span className="req-star">*</span></label>
-                                                    <textarea rows={5} cols={7} className="form-control" value={message}
+                                                    <textarea rows={5} cols={7} className="form-control" value={message || ""}
                                                         onChange={(e) => setmessage(e.target.value)} />
 
                                                 </div>

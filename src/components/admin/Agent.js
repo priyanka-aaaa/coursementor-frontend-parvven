@@ -22,8 +22,10 @@ export default function AdminUniversity() {
     const [deleteId, setdeleteId] = useState("");
 
     useEffect(() => {
+        var adminId = localStorage.getItem('adminId');
         var mounted = localStorage.getItem("adminToken")
         setMounted(mounted)
+        if (adminId !== null) {
         function myallStudents(){
             setmyloader("true")
             const url = process.env.REACT_APP_SERVER_URL + "admin/allStudents";
@@ -39,6 +41,7 @@ export default function AdminUniversity() {
                 })
         }
         myallStudents()
+    }
     }, [])
     let handleDeleteClick = (value) => {
         setshowSweetAlert("1")

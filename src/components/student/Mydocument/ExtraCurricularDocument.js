@@ -34,8 +34,10 @@ export default function ExtraCurricularDocument() {
     const [myPassportBackDocx, setmyPassportBackDocx] = useState("0");
     const [mycvDocx, setmycvDocx] = useState("0");
     useEffect(() => {
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
+        if (studentId !== null) {
         function extraCurricularAllDetails() {
             fetch(process.env.REACT_APP_SERVER_URL + 'student/extraCurricularDocument', {
                 method: 'get',
@@ -57,6 +59,7 @@ export default function ExtraCurricularDocument() {
                 })
         }
         extraCurricularAllDetails()
+    }
     }, [])
     function handleClick() {
         if (down === "1") {

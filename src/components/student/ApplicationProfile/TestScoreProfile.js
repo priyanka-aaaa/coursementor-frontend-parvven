@@ -18,8 +18,10 @@ export default function TestScoreProfile() {
 const [down, setdown] = useState("1");
 const [up, setup] = useState("0");
     useEffect(() => {
+        var studentId = localStorage.getItem('studentId');
         var mounted = localStorage.getItem("studentToken")
         setMounted(mounted)
+        if (studentId !== null) {
         axios.get(process.env.REACT_APP_SERVER_URL + 'student/score', { headers: { 'Authorization': mounted } })
             .then(function (res) {
                 if (res.data.success === true) {
@@ -32,6 +34,7 @@ const [up, setup] = useState("0");
             })
             .catch(error => {
             });
+        }
     }, [])
     function handleClick() {
         if (down === "1") {
@@ -106,7 +109,7 @@ const [up, setup] = useState("0");
                             <div className="col-12 col-sm-6 col-md-6 col-lg-4">
                                 <div className="form-group"><label htmlFor="">Marks in English in Class
                                     12</label><input
-                                        value={scoremarks}
+                                        value={scoremarks || ""}
                                         onChange={(e) => setscoremarks(e.target.value)}
                                         type="number" className="form-control" name="score_12th" placeholder="Marks in English in Class 12" />
                                 </div>

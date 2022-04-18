@@ -28,6 +28,7 @@ function AdminLayout(props) {
     const [email, setemail] = useState();
     const [adminEmail, setadminEmail] = useState();
     const [adminId, setadminId] = useState();
+    const [currentMenu, setcurrentMenu] = useState("");
     function handletoogleClick() {
         if (width === "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion") {
             setwidth("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled")
@@ -55,8 +56,13 @@ function AdminLayout(props) {
             var adminEmail = "";
             setredirectToReferrer("true")
         }
+        var currentUrl = window.location.href;
+        var splitcurrentUrl = currentUrl.split("student/")
+        setcurrentMenu(splitcurrentUrl[1])
     }, [])
-
+    function handleCurrentClick(value) {
+        setcurrentMenu(value)
+    }
     function logout() {
         localStorage.removeItem("adminId");
         localStorage.removeItem("adminToken");
@@ -83,7 +89,7 @@ function AdminLayout(props) {
         <div id="page-top">
             <div id="wrapper">
                 <ul className={width} id="accordionSidebar">
-                    <a className="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+                    <span className="sidebar-brand d-flex align-items-center justify-content-center" href="#">
                         {width === "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" ?
                             <Link to={'/admin/dashboard'}  >
                                 <img src={images["small-dash-logo.png"]} alt="" />
@@ -96,43 +102,100 @@ function AdminLayout(props) {
                         }
                         <div className="sidebar-brand-text mx-3">
                         </div>
-                    </a>
+                    </span>
                     <hr className="sidebar-divider my-0" />
-                    <li className="nav-item ">
-                        <Link to={'/admin/dashboard'} className="nav-link" href="#">
-                            <FontAwesomeIcon icon={faDashboard} />
-                            <span>Dashboard</span></Link>
-                    </li>
-                    <li className="nav-item ">
-                        <Link to={'/admin/studentApplication'} className="nav-link" href="#">
-                            <FontAwesomeIcon icon={faAddressBook} />
-                            <span>New Application</span></Link>
-                    </li>
-                    {/* <li className="nav-item ">
-                        <Link to={'/admin/studentApplication'} className="nav-link" href="#">
-                            <FontAwesomeIcon icon={faAddressBook} />
-                            <span>Old Application</span></Link>
-                    </li> */}
-                    <li className="nav-item">
-                        <Link to={'/admin/student'} className="nav-link" >
-                            <FontAwesomeIcon icon={faGraduationCap} />
-                            <span>Student</span></Link>
-                    </li>
-                    <li className="nav-item ">
-                        <Link to={'/admin/agent'} className="nav-link" href="#">
-                            <FontAwesomeIcon icon={faUserSecret} />
-                            <span>Agent</span></Link>
-                    </li>
-                    <li className="nav-item ">
-                        <Link to={'/admin/university'} className="nav-link" href="#">
-                            <FontAwesomeIcon icon={faUniversity} />
-                            <span>University</span></Link>
-                    </li>
-                    <li className="nav-item ">
-                        <Link to={'/admin/applicationStep'} className="nav-link" href="#">
-                            <FontAwesomeIcon icon={faStepForward} />
-                            <span>Application Step</span></Link>
-                    </li>
+                    {currentMenu === "dashboard" ?
+                        <li className="nav-item " onClick={() => handleCurrentClick("dashboard")}>
+                            <Link to={'/admin/dashboard'} className="nav-link current-tab" href="#">
+                                <FontAwesomeIcon icon={faDashboard} />
+                                <span>Dashboard</span></Link>
+                        </li>
+                        :
+                        <li className="nav-item " onClick={() => handleCurrentClick("dashboard")}>
+                            <Link to={'/admin/dashboard'} className="nav-link" href="#">
+                                <FontAwesomeIcon icon={faDashboard} />
+                                <span>Dashboard</span></Link>
+                        </li>
+                    }
+                    {currentMenu === "studentApplication" ?
+                        <li className="nav-item "  onClick={() => handleCurrentClick("studentApplication")}>
+                            <Link to={'/admin/studentApplication'} className="nav-link current-tab" href="#">
+                                <FontAwesomeIcon icon={faAddressBook} />
+                                <span>New Application</span></Link>
+                        </li>
+                        :
+                        <li className="nav-item "  onClick={() => handleCurrentClick("studentApplication")}>
+                            <Link to={'/admin/studentApplication'} className="nav-link" href="#">
+                                <FontAwesomeIcon icon={faAddressBook} />
+                                <span>New Application</span></Link>
+                        </li>
+                    }
+                    {currentMenu === "Student" ?
+                        <li className="nav-item current-tab"  onClick={() => handleCurrentClick("Student")}>
+                            <Link to={'/admin/student'} className="nav-link" >
+                                <FontAwesomeIcon icon={faGraduationCap} />
+                                <span>Student</span></Link>
+                        </li>
+                        :
+                        <li className="nav-item"  onClick={() => handleCurrentClick("Student")}>
+                            <Link to={'/admin/student'} className="nav-link" >
+                                <FontAwesomeIcon icon={faGraduationCap} />
+                                <span>Student</span></Link>
+                        </li>
+                    }
+                    {currentMenu === "Agent" ?
+                        <li className="nav-item current-tab"  onClick={() => handleCurrentClick("Agent")}>
+                            <Link to={'/admin/agent'} className="nav-link" href="#">
+                                <FontAwesomeIcon icon={faUserSecret} />
+                                <span>Agent</span></Link>
+                        </li>
+                        :
+                        <li className="nav-item "  onClick={() => handleCurrentClick("Agent")}>
+                            <Link to={'/admin/agent'} className="nav-link" href="#">
+                                <FontAwesomeIcon icon={faUserSecret} />
+                                <span>Agent</span></Link>
+                        </li>
+                    }
+                    {currentMenu === "University" ?
+                        <li className="nav-item current-tab"  onClick={() => handleCurrentClick("University")}>
+                            <Link to={'/admin/university'} className="nav-link" href="#">
+                                <FontAwesomeIcon icon={faUniversity} />
+                                <span>University</span></Link>
+                        </li>
+                        :
+                        <li className="nav-item "  onClick={() => handleCurrentClick("University")}>
+                            <Link to={'/admin/university'} className="nav-link" href="#">
+                                <FontAwesomeIcon icon={faUniversity} />
+                                <span>University</span></Link>
+                        </li>
+                    }
+                      
+                       {/* {currentMenu === "AdminUniversity" ?
+                        <li className="nav-item current-tab"  onClick={() => handleCurrentClick("AdminUniversity")}>
+                            <Link to={'/admin/AdminUniversity'} className="nav-link" href="#">
+                                <FontAwesomeIcon icon={faUniversity} />
+                                <span>Admin University</span></Link>
+                        </li>
+                        :
+                        <li className="nav-item "  onClick={() => handleCurrentClick("AdminUniversity")}>
+                            <Link to={'/admin/AdminUniversity'} className="nav-link" href="#">
+                                <FontAwesomeIcon icon={faUniversity} />
+                                <span>Admin University</span></Link>
+                        </li>
+                    } */}
+                    {currentMenu === "applicationStep" ?
+                        <li className="nav-item current-tab"  onClick={() => handleCurrentClick("applicationStep")}>
+                            <Link to={'/admin/applicationStep'} className="nav-link" href="#">
+                                <FontAwesomeIcon icon={faStepForward} />
+                                <span>Application Step</span></Link>
+                        </li>
+                        :
+                        <li className="nav-item "  onClick={() => handleCurrentClick("applicationStep")}>
+                            <Link to={'/admin/applicationStep'} className="nav-link" href="#">
+                                <FontAwesomeIcon icon={faStepForward} />
+                                <span>Application Step</span></Link>
+                        </li>
+                    }
                     <div className="text-center d-none d-md-inline">
                         <button title="Sidenar-toggle" className="rounded-circle border-0" id="sidebarToggle" onClick={() => handletoogleClick()}>
                             <i className="fa-solid fa-arrow-right"></i>

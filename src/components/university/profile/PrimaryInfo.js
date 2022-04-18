@@ -39,6 +39,7 @@ export default function PrimaryInfo() {
     const [up, setup] = useState("0");
     const [fixedName, setfixedName] = useState("0");
 
+    const [universityAlearyError, setuniversityAlearyError] = useState("");
 
     const [loader, setmyloader] = useState("false");
     const [countries, setcountries] = useState([{
@@ -167,6 +168,7 @@ export default function PrimaryInfo() {
     }
     function handleFormSubmit(event) {
         event.preventDefault();
+        setuniversityAlearyError("");
         setdescriptionError("");
         settypeError("");
         setphoneError("");
@@ -227,6 +229,10 @@ export default function PrimaryInfo() {
             axios.put(process.env.REACT_APP_SERVER_URL + 'university/primaryInformation', obj, { headers: { 'Authorization': mounted } })
                 .then(function (res) {
                     setmyloader("false")
+                    if (res.data.message === "university name already exist") {
+                        setmyloader("false")
+                        setuniversityAlearyError(res.data.message)
+                    }
                     if (res.data.success === true) {
                         setsuccessMessage("Primary Information Updated")
                         setTimeout(() => setsubmitSuccess(""), 3000);
@@ -316,6 +322,7 @@ export default function PrimaryInfo() {
                                                     required />
 
                                             }
+                                            <div style={{ color: "red" }}> {universityAlearyError}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -479,14 +486,14 @@ export default function PrimaryInfo() {
                                         </div>
                                     </div>
                                     <div className="col-md-4">
-                                    <div className="form-group">
-                                        <label>Parent organization</label>
-                                        <input type="text" className="form-control" placeholder="Parent organization" name="pr-org"
+                                        <div className="form-group">
+                                            <label>Parent organization</label>
+                                            <input type="text" className="form-control" placeholder="Parent organization" name="pr-org"
 
-                                            value={organization}
-                                            onChange={(e) => setorganization(e.target.value)}
-                                        />
-                                    </div>
+                                                value={organization}
+                                                onChange={(e) => setorganization(e.target.value)}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="mb-3">
